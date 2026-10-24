@@ -67,3 +67,49 @@ Acceptance criteria (examples):
 3. Write the mini-spec: checkpoint data model (nodes/edges/metadata), shadow-git storage layout, UI states.
 4. Scaffold the VS Code extension and implement the M0 capture loop against a toy repository.
 5. Commit per milestone; update `journal.md` at session end.
+
+---
+
+## 8. Session 3 appendix — Fusion scope ratified (2026-10-24, append-only)
+
+The user confirmed building the PMS idea and the non-linear interface as **one product**: one development graph as the system of record; the IDE is the authoring surface and the board is a read-only projection of the same graph. This is Path C from the dossier (Section 6.3) with Path A as the vehicle. Where this appendix conflicts with Section 4, this appendix wins; the substance of the earlier milestones is preserved, the assistant loop is inserted explicitly, and the web board is the final milestone.
+
+### Decisions ratified
+
+| # | Decision | Choice |
+|---|----------|--------|
+| 1 | Build path | Path A now (IDE-core-first); fused Path C as the destination (one graph core, two surfaces) |
+| 2 | v1 user | Solo developers with AI assistants; team/multi-user features deferred |
+| 3 | Passivity | Passive-first: derive links and statuses; optional one-keystroke confirmations when unsure; never a required form |
+| 4 | Checkpoint storage | Shadow git repo at `<workspace>/.evograph/store.git` (implemented in M0); metadata embedded in checkpoint commit messages (see mini-spec Section 3.4) |
+| 5 | Model access | Pluggable provider interface; M0 ships a deterministic heuristic summarizer; the LLM provider arrives with the assistant loop (M2); provider choice still open |
+| 6 | Assistant surface | Own minimal chat panel (M2), not third-party assistant integration |
+| 7 | Board surface | Read-only manager web view as the first PMS surface (M5); no separate PMS database |
+
+### Milestones (replaces the Section 4 labels)
+
+- **M0 — Checkpoint core (done: scaffold).** Shadow-git store, `origin/manual/ai_prompt/ai_applied` types modeled, manual + origin capture with auto-generated titles/descriptions, restore-to-checkpoint, persistence. Code in `extension/`. Tracked as bd issue `evo_graph_pms-ldj`.
+- **M1 — Development history graph panel.** Webview DAG; switch/branch/delete (children reattach); vocabulary from the paper. bd `evo_graph_pms-mnd`.
+- **M2 — Assistant loop.** Minimal chat panel; prompt and applied-code checkpoints auto-created; pluggable provider. bd `evo_graph_pms-0zj`.
+- **M3 — Compare + Review Mode + passive task linking.** Side-by-side checkpoint diff; provenance highlighting; the confirm flow from mini-spec Section 6. bd `evo_graph_pms-uzg`.
+- **M4 — Graph-as-context + LLM merge v1.** bd `evo_graph_pms-dpk`.
+- **M5 — Manager web view.** Read-only board as a projection of the checkpoint graph; per-task exploration trees; evidence-derived statuses. First visible PMS surface. bd `evo_graph_pms-m8r`.
+
+### Non-goals for v1 (explicit)
+
+- Microservices architecture — a single modular process; service splits only if a real scale or team need appears.
+- IntelliJ plugin — VS Code only until the product is validated.
+- Budget/time-tracking service.
+- OS-level "Deep Work" notification silencing.
+- Multi-user graph sharing and merge semantics (research-grade; deferred).
+- Web-based editing of checkpoints (M5 is read-only).
+- Graph database (Neo4j and similar) — git objects + embedded JSON metadata only.
+- Public release under any "EvoGraph" name (14+ collisions; see dossier Section 1).
+- From the old PMS draft: `#102`-style commit parsing as the *core* mechanism — demoted to an import/interop channel; task status is derived from graph evidence, not commit-message tags.
+
+### Document map
+
+- Mini-spec: `history/nonlinear-interface-mini-spec.md` (node/edge model, shadow-git layout, UI states, confirm flow, M0 acceptance).
+- Dossier: `history/evograph-ide-research.md` (ground truth; do not re-research).
+- PMS draft originals: `~/my_space/coding/pms_project_management_system_01` (extraction to `history/pms-draft/` tracked as a separate bd issue).
+- Code: `extension/` (VS Code extension, TypeScript).

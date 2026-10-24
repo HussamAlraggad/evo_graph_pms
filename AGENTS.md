@@ -50,9 +50,17 @@ cp -rf source dest          # NOT: cp -r source dest
 ## Research & Tooling Notes
 
 - Repo focus: the **non-linear interface for AI-assisted coding** (EvoGraph IDE, arXiv:2604.18883). The Software 3.0 EvoGraph (arXiv:2508.05199) is adjacent reference only. Execution plan lives in `history/evograph-ide-execution-brief.md`.
+- Fusion product (ratified 2026-10-24): one development graph as the system of record; IDE authoring surface first (M0-M4), read-only manager web view last (M5). Milestones, decisions, and v1 non-goals: `history/evograph-ide-execution-brief.md` Section 8. Design mini-spec: `history/nonlinear-interface-mini-spec.md`. Code: `extension/` (VS Code extension, TypeScript; `npm run check` must be green).
+- UI/design layer is governed by the **impeccable** skill: `PRODUCT.md` (repo root) and `DESIGN.md` are its artifacts; run its `context`/`init` flows rather than hand-editing those files.
 - Before batching tool calls, read each tool's required parameters from the catalog. Missing required args (e.g., `firecrawl_research_related_papers.intent`) can silently return empty results instead of raising errors.
 - Keep Firecrawl scrape concurrency moderate (about 8 or fewer scrapes per batch); the API rate-limits at ~11 requests/min and partial failures are easy to miss inside batched `Promise.allSettled` results. Prefer search snippets over full scrapes when full text is not needed.
 - "EvoGraph" is overloaded (14+ distinct works/products). Always qualify which EvoGraph is meant: the IDE plugin (arXiv:2604.18883), the Software 3.0 framework (arXiv:2508.05199), or an unrelated same-name work (see the disambiguation table in `history/evograph-ide-research.md`).
+
+## Extension Dev Notes (`extension/`)
+
+- Toolchain: TypeScript 6 in NodeNext mode. Keep `module`/`moduleResolution` on NodeNext (node10 resolution is deprecated and errors), keep `"types": ["node"]` in `tsconfig.json` (TS 6 no longer auto-includes node types for src-only configs), and keep the vitest config named `vitest.config.mts` (a `.ts` config is loaded as CommonJS and warns).
+- `git for-each-ref` does not support `%x1f` pretty-format escapes (only `git log --format` does); use a literal tab separator when parsing ref listings.
+- Quality gate: `npm run check` in `extension/` (lint → typecheck → tests → compile) must be green before committing code changes.
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:7510c1e2 -->
 ## Beads Issue Tracker
