@@ -1,0 +1,5 @@
+Roboto Condensed (variable)
+Copyright 2011 The Roboto Project Authors
+License: Apache License 2.0 (see LICENSE-Roboto-Condensed.txt)
+Source: https://fonts.google.com/specimen/Roboto+Condensed
+File: roboto-condensed-latin.woff2 (latin subset, variable weight axis, fetched 2026-10-24)

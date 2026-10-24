@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Checkpoint File preview</title>
+<link rel="stylesheet" href="../media/view.css">
+<style>
+  /* Preview-only: deterministically paint the production :focus-visible outline
+     (identical declarations to view.css `.station:focus-visible .focus-ring`) on the
+     single station the harness marks, so the keyboard-focus state captures headlessly. */
+  .station.preview-focus-ring .focus-ring {
+    stroke: var(--vscode-focusBorder, #3794ff);
+    stroke-width: 2;
+  }
+  .station.preview-hover .hit {
+    fill: var(--hover);
+  }
+  /* Preview-only: emulate the VS Code theme tokens the real webview receives. */
+  body.vscode-dark {
+    --vscode-button-background: #0e639c;
+    --vscode-button-foreground: #ffffff;
+    --vscode-button-hoverBackground: #1177bb;
+    --vscode-font-family: "Segoe UI", system-ui, sans-serif;
+    --vscode-focusBorder: #007fd4;
+  }
+  body.vscode-light {
+    --vscode-button-background: #0078d4;
+    --vscode-button-foreground: #ffffff;
+    --vscode-button-hoverBackground: #026ec1;
+    --vscode-font-family: "Segoe UI", system-ui, sans-serif;
+    --vscode-focusBorder: #0090f1;
+  }
+  body.vscode-high-contrast {
+    --vscode-button-background: #ffffff;
+    --vscode-button-foreground: #000000;
+    --vscode-button-hoverBackground: #e6e6e6;
+    --vscode-font-family: "Segoe UI", system-ui, sans-serif;
+    --vscode-focusBorder: #f38518;
+  }
+  body.vscode-high-contrast-light {
+    --vscode-button-background: #0f0f0f;
+    --vscode-button-foreground: #ffffff;
+    --vscode-button-hoverBackground: #313131;
+    --vscode-font-family: "Segoe UI", system-ui, sans-serif;
+    --vscode-focusBorder: #0f4a85;
+  }
+</style>
+</head>
+<body>
+<div id="root" class="sheet"></div>
+<script>
+  (function () {
+    "use strict";
+    var params = new URLSearchParams(window.location.search);
+    var theme = params.get("theme") || "dark";
+    document.body.className =
+      theme === "light"
+        ? "vscode-light"
+        : theme === "hc"
+          ? "vscode-high-contrast"
+          : theme === "hcl"
+            ? "vscode-high-contrast-light"
+            : "vscode-dark";
+
+    window.acquireVsCodeApi = function () {
+      return {
+        postMessage: function (message) {
+          window.__lastPosted = message;
+        },
+      };
+    };
+
+    var PREFIX = "evograph-checkpoint-";
+    function id(n) {
+      return PREFIX + String(n).padStart(2, "0");
+    }
+
+    window.__previewModel = {
+      checkpoints: [
+        { id: id(1), type: "origin", title: "Origin", description: "Baseline snapshot.", createdAt: "2026-10-24T09:12:00.000Z", parentId: null },
+        { id: id(2), type: "manual", title: "Changed README.md", description: "", createdAt: "2026-10-24T09:48:00.000Z", parentId: id(1) },
+        { id: id(3), type: "manual", title: "Changed 4 files", description: "", createdAt: "2026-10-24T10:31:00.000Z", parentId: id(2) },
+        { id: id(4), type: "manual", title: "Changed auth-flow.ts", description: "", createdAt: "2026-10-24T10:58:00.000Z", parentId: id(3) },
+        { id: id(5), type: "manual", title: "Changed login.ts", description: "", createdAt: "2026-10-24T11:02:00.000Z", parentId: id(3) },
+        { id: id(6), type: "manual", title: "Changed session-manager.ts and 11 other files", description: "", createdAt: "2026-10-24T11:20:00.000Z", parentId: id(5) },
+        { id: id(7), type: "ai_prompt", title: "Prompt: fix the race condition", description: "", createdAt: "2026-10-24T11:26:00.000Z", parentId: id(6) },
+        { id: id(8), type: "ai_applied", title: "Applied: 3 edits from the prompt", description: "", createdAt: "2026-10-24T11:31:00.000Z", parentId: id(7) },
+      ],
+      activeId: id(6),
+      visitedIds: [id(1), id(2), id(3), id(4), id(5), id(6)],
+    };
+  })();
+</script>
+<script src="../media/graph.js"></script>
+<script>
+  (function () {
+    "use strict";
+    try {
+      var state = new URLSearchParams(window.location.search).get("state") || "graph";
+      if (state === "empty") {
+        window.dispatchEvent(
+          new MessageEvent("message", { data: { type: "graph", model: { checkpoints: [], activeId: null, visitedIds: [] } } }),
+        );
+      } else if (state === "error") {
+        window.dispatchEvent(
+          new MessageEvent("message", {
+            data: { type: "graph-error", message: "Checkpoint ref evograph-checkpoint-03 points to a missing commit." },
+          }),
+        );
+      } else {
+        window.dispatchEvent(new MessageEvent("message", { data: { type: "graph", model: window.__previewModel } }));
+        if (state === "focus") {
+          var station = document.querySelector('.station[data-id="evograph-checkpoint-06"]');
+          if (station) {
+            station.classList.add("preview-focus-ring");
+            station.focus();
+          }
+        }
+        if (state === "switching") {
+          var pending = document.querySelector('.station[data-id="evograph-checkpoint-02"]');
+          if (pending) pending.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+        }
+        if (state === "menu") {
+          var target = document.querySelector('.station[data-id="evograph-checkpoint-04"]');
+          if (target) target.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true }));
+        }
+        if (state === "hover") {
+          var hovered = document.querySelector('.station[data-id="evograph-checkpoint-02"]');
+          if (hovered) hovered.classList.add("preview-hover");
+        }
+        if (state === "post-switch") {
+          var fromStation = document.querySelector('.station[data-id="evograph-checkpoint-05"]');
+          if (fromStation) fromStation.focus();
+          var switched = JSON.parse(JSON.stringify(window.__previewModel));
+          switched.activeId = "evograph-checkpoint-05";
+          window.dispatchEvent(new MessageEvent("message", { data: { type: "graph", model: switched } }));
+          var activeStation = document.querySelector('.station.active');
+          if (activeStation) activeStation.classList.add("preview-focus-ring");
+        }
+      }
+    } catch (error) {
+      document.getElementById("root").textContent = "PREVIEW ERROR: " + error.message;
+    }
+  })();
+</script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import type { CheckpointEngine } from "./core/engine";
+import { showError } from "./ui/errors";
 import { checkpointTypeLabel, formatRelativeTime } from "./ui/format";
 import { STATUS_MENU_COMMAND, type StatusBarController } from "./ui/statusBar";
 
@@ -13,15 +14,33 @@ export function registerCommands(
   context: vscode.ExtensionContext,
   engine: CheckpointEngine | undefined,
   statusBar: StatusBarController,
+  refreshGraph: () => Promise<void>,
 ): void {
   context.subscriptions.push(
-    vscode.commands.registerCommand("evograph.createCheckpoint", () => createCheckpoint(engine, statusBar)),
-    vscode.commands.registerCommand("evograph.restoreCheckpoint", () => restoreCheckpoint(engine, statusBar)),
+    vscode.commands.registerCommand("evograph.createCheckpoint", () =>
+      createCheckpoint(engine, statusBar, refreshGraph),
+    ),
+    vscode.commands.registerCommand("evograph.switchCheckpoint", () =>
+      switchCheckpoint(engine, statusBar, refreshGraph),
+    ),
+    vscode.commands.registerCommand("evograph.openGraph", () => openGraph()),
     vscode.commands.registerCommand(STATUS_MENU_COMMAND, () => showStatusMenu(engine)),
   );
 }
 
-async function createCheckpoint(engine: CheckpointEngine | undefined, statusBar: StatusBarController): Promise<void> {
+async function openGraph(): Promise<void> {
+  try {
+    await vscode.commands.executeCommand("evograph.history.focus");
+  } catch (error) {
+    showError("open the checkpoint file", error);
+  }
+}
+
+async function createCheckpoint(
+  engine: CheckpointEngine | undefined,
+  statusBar: StatusBarController,
+  refreshGraph: () => Promise<void>,
+): Promise<void> {
   if (!engine) {
     void vscode.window.showErrorMessage(NO_WORKSPACE_MESSAGE);
     return;
@@ -31,14 +50,18 @@ async function createCheckpoint(engine: CheckpointEngine | undefined, statusBar:
       { location: vscode.ProgressLocation.Window, title: "EvoGraph: creating checkpoint" },
       () => engine.createCheckpoint(),
     );
-    await statusBar.refresh();
+    await Promise.all([statusBar.refresh(), refreshGraph()]);
     void vscode.window.showInformationMessage(`EvoGraph: checkpoint created — ${checkpoint.title}`);
   } catch (error) {
-    showCommandError("create a checkpoint", error);
+    showError("create a checkpoint", error);
   }
 }
 
-async function restoreCheckpoint(engine: CheckpointEngine | undefined, statusBar: StatusBarController): Promise<void> {
+async function switchCheckpoint(
+  engine: CheckpointEngine | undefined,
+  statusBar: StatusBarController,
+  refreshGraph: () => Promise<void>,
+): Promise<void> {
   if (!engine) {
     void vscode.window.showErrorMessage(NO_WORKSPACE_MESSAGE);
     return;
@@ -59,26 +82,21 @@ async function restoreCheckpoint(engine: CheckpointEngine | undefined, statusBar
       checkpoint,
     }));
     const picked = await vscode.window.showQuickPick(picks, {
-      title: "Restore checkpoint",
-      placeHolder: "Select a checkpoint to restore",
+      title: "Switch to checkpoint",
+      placeHolder: "Select a checkpoint to switch to",
     });
     if (!picked) return;
 
-    const confirmation = await vscode.window.showWarningMessage(
-      `Restore "${picked.checkpoint.title}"? Uncheckpointed changes in the workspace will be replaced.`,
-      { modal: true },
-      "Restore",
+    const result = await vscode.window.withProgress(
+      { location: vscode.ProgressLocation.Window, title: "EvoGraph: switching checkpoint" },
+      () => engine.switchToCheckpoint(picked.checkpoint.id),
     );
-    if (confirmation !== "Restore") return;
-
-    const restored = await vscode.window.withProgress(
-      { location: vscode.ProgressLocation.Window, title: "EvoGraph: restoring checkpoint" },
-      () => engine.restoreCheckpoint(picked.checkpoint.id),
-    );
-    await statusBar.refresh();
-    void vscode.window.showInformationMessage(`EvoGraph: restored checkpoint — ${restored.title}`);
+    await Promise.all([statusBar.refresh(), refreshGraph()]);
+    if (result.safety) {
+      vscode.window.setStatusBarMessage("EvoGraph: saved a safety checkpoint before switching", 4000);
+    }
   } catch (error) {
-    showCommandError("restore a checkpoint", error);
+    showError("switch checkpoints", error);
   }
 }
 
@@ -93,16 +111,14 @@ async function showStatusMenu(engine: CheckpointEngine | undefined): Promise<voi
       run: () => void vscode.commands.executeCommand("evograph.createCheckpoint"),
     },
     {
-      label: "$(history) Restore checkpoint…",
-      run: () => void vscode.commands.executeCommand("evograph.restoreCheckpoint"),
+      label: "$(history) Switch to checkpoint…",
+      run: () => void vscode.commands.executeCommand("evograph.switchCheckpoint"),
+    },
+    {
+      label: "$(map) Open checkpoint file",
+      run: () => void vscode.commands.executeCommand("evograph.openGraph"),
     },
   ];
   const picked = await vscode.window.showQuickPick(picks, { title: "EvoGraph" });
   if (picked) picked.run();
-}
-
-function showCommandError(action: string, error: unknown): void {
-  const message = error instanceof Error ? error.message : String(error);
-  console.error(`EvoGraph: failed to ${action}`, error);
-  void vscode.window.showErrorMessage(`EvoGraph: failed to ${action}: ${message}`);
 }

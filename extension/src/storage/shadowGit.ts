@@ -20,6 +20,10 @@ export interface CheckpointRef {
   oid: string;
 }
 
+export interface StoreState {
+  visitedIds: string[];
+}
+
 export interface NameStatusEntry {
   status: string;
   path: string;
@@ -92,10 +96,42 @@ export class ShadowGitStore {
   }
 
   async addCheckpointRef(id: string, oid: string): Promise<void> {
-    if (!CHECKPOINT_ID_PATTERN.test(id)) {
-      throw new Error(`Invalid checkpoint id for a git ref: ${id}`);
-    }
+    this.assertValidCheckpointId(id);
     await runGit([...this.gitArgs(), "update-ref", `${CHECKPOINTS_REF_PREFIX}${id}`, oid]);
+  }
+
+  async removeCheckpointRef(id: string): Promise<void> {
+    this.assertValidCheckpointId(id);
+    await runGit([...this.gitArgs(), "update-ref", "-d", `${CHECKPOINTS_REF_PREFIX}${id}`]);
+  }
+
+  /** Resolves the snapshot tree object of a checkpoint commit. */
+  async getTreeOid(commitOid: string): Promise<string> {
+    return (await runGit([...this.gitArgs(), "rev-parse", `${commitOid}^{tree}`])).trim();
+  }
+
+  /** Local engine state (not part of the checkpoint graph): which nodes the session has visited. */
+  async readState(): Promise<StoreState> {
+    try {
+      const raw = await fs.readFile(this.statePath, "utf8");
+      const parsed = JSON.parse(raw) as { visitedIds?: unknown };
+      const visitedIds = Array.isArray(parsed.visitedIds)
+        ? parsed.visitedIds.filter((value): value is string => typeof value === "string")
+        : [];
+      return { visitedIds };
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+        return { visitedIds: [] };
+      }
+      throw error;
+    }
+  }
+
+  async writeState(state: StoreState): Promise<void> {
+    await fs.mkdir(this.storeDir, { recursive: true });
+    const temporaryPath = `${this.statePath}.tmp`;
+    await fs.writeFile(temporaryPath, JSON.stringify(state), "utf8");
+    await fs.rename(temporaryPath, this.statePath);
   }
 
   async listCheckpointRefs(): Promise<CheckpointRef[]> {
@@ -278,6 +314,16 @@ export class ShadowGitStore {
 
   private gitArgs(): string[] {
     return ["--git-dir", this.gitDir];
+  }
+
+  private get statePath(): string {
+    return path.join(this.storeDir, "state.json");
+  }
+
+  private assertValidCheckpointId(id: string): void {
+    if (!CHECKPOINT_ID_PATTERN.test(id)) {
+      throw new Error(`Invalid checkpoint id for a git ref: ${id}`);
+    }
   }
 
   private worktreeGitArgs(): string[] {

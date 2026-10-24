@@ -1,6 +1,7 @@
 .vscode/**
 src/**
 test/**
+preview/**
 node_modules/**
 out/**/*.map
 tsconfig.json

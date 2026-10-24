@@ -8,4 +8,11 @@ export default tseslint.config(
       "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
     },
   },
+  {
+    files: ["media/**/*.js"],
+    languageOptions: {
+      globals: { acquireVsCodeApi: "readonly", window: "readonly", document: "readonly" },
+    },
+    rules: { "no-undef": "error" },
+  },
 );

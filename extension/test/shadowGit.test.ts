@@ -193,4 +193,21 @@ describe("ShadowGitStore", () => {
     const commits = await reloaded.listCommits();
     expect(commits.map((commit) => commit.oid)).toEqual([first]);
   });
+
+  it("resolves tree oids, removes refs, and round-trips engine state", async () => {
+    await writeWorkspaceFile(root, "app.ts", "base");
+    await store.ensure();
+    const first = await commitSnapshot(null, "first");
+    const id = "55555555-5555-4555-8555-555555555555";
+    await store.addCheckpointRef(id, first);
+
+    expect(await store.getTreeOid(first)).toMatch(/^[0-9a-f]{40,64}$/);
+
+    await store.removeCheckpointRef(id);
+    expect(await store.listCheckpointRefs()).toEqual([]);
+
+    expect(await store.readState()).toEqual({ visitedIds: [] });
+    await store.writeState({ visitedIds: [id, "another-id"] });
+    expect(await store.readState()).toEqual({ visitedIds: [id, "another-id"] });
+  });
 });
