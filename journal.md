@@ -1,5 +1,75 @@
 # Journal
 
+## 2026-10-24 (cont. 6) -- M1 finish: ship verdict, documentation, and the wiring catch
+
+### What was done
+
+- Ran the full impeccable finish flow for the M1 panel: evidence round (21 captures across dark/light/HC/HC-light, narrow/wide, graph/empty/error/focus/switching/menu/hover/post-switch), mechanical detector (clean), and a fresh finish-reviewer subagent over five rounds (degraded reviewer procedure): initial `fix` (8 material fixes) -> `fix` (3 regressions introduced by that batch) -> `fix` (day olive, 320 coherence, amber proof) -> `fix` (day amber contrast) -> **ship**, then a post-ship confirmation that the ship stands over the final build.
+- Fixes landed across the cycle: bundled Roboto Condensed (Apache-2.0, license + notice in `extension/media/fonts/`); fixed type scale with visible-width ellipsis; road-under-thread (7px links vs 4.5px course); links reaching tick marks; switching state; focus restoration after re-render; hover state; per-theme contrast tokens (`--purple-ink`, `--olive`, `--amber`); viewport-aware sheet width; shell capped with the sheet.
+- **Critical catch (post-ship, by the documenter):** `requestSwitch` was called from every interaction handler but never defined — the shipped click-to-switch path would have thrown `ReferenceError`; the harness's forced states had masked it. Fixed in `graph.js`; prevention: `npm run lint` now lints `media/**/*.js` with `no-undef` (an undefined call now fails `npm run check`).
+- Documentation pass (documenter subagent, degraded procedure): `DESIGN.md` (token-bearing frontmatter + eight canonical sections, "The Interchange Sheet", 13 named rules) and `.impeccable/design.json` (schemaVersion 2, 9 component snippets, narrative). Verified independently (frontmatter tokens, section order, sidecar parse).
+- Evidence: `.impeccable/review/` (21 files, hash-distinct, captured against the final build); `npm run check` green including the new media lint gate (30/30 tests).
+
+### Interface changes made
+
+- Webview panel ("Checkpoint File") in the VS Code secondary sidebar; renderer vocabulary (stations / control rings / ticks / ghost dashes / flood / course thread); interaction wiring (`requestSwitch`) with dim + aria-busy pending state; `historyView.ts` refresh-on-error; lint scope extended to `media/`.
+
+### What I struggled with / broke
+
+- Parallel edit/capture races twice (harness edits landing mid-capture) — lesson: never run the capture loop in the same tool batch as a harness edit.
+- The undefined `requestSwitch` shipped through four reviewer rounds: static review and forced harness states both miss interactivity. The documenter's defect scan caught it; the media lint gate now guards that class.
+- The review cycle ran five rounds chasing small regressions my own fixes introduced (contrast tokens, viewport coherence); each round was validated with live DOM probes plus pixel evidence.
+
+### Test status
+
+```
+npm run check (extension/): lint (src, test, media) clean; typecheck clean; vitest 30/30; compile clean.
+Design detector: no findings. Finish reviewer: ship (scope: the scored fixes, the rewiring fix + gate, HC-light renditions).
+```
+
+### Handoff to next agent
+
+- M1 is complete and shipped: implementation, finish review (`ship`), documentation (`DESIGN.md` + `.impeccable/design.json`), evidence in `.impeccable/review/`.
+- Next: **dogfood** — open `extension/` in VS Code, press F5, use the "Checkpoint File" view in the secondary sidebar; run the 15-minute branching scenario end-to-end (switch by click, delete with reattach, theme switch). Friction findings become new bd issues (`discovered-from:evo_graph_pms-mnd`).
+- The live host round-trip (message -> safety checkpoint -> restore -> re-render) was NOT exercised in a real VS Code session by the review — it is the first thing dogfood should verify.
+- After dogfood: M2 (assistant loop, bd `evo_graph_pms-0zj`) is unblocked; keep the documented "route grammar" intact (true 45° fork, numbered control rings, flooded active station, ghost dashes, one-frame redraw).
+- Push pending user permission (`git push` + `bd dolt push` were NOT run).
+
+## 2026-10-24 (cont. 5) -- M1 build: graph panel (The Interchange Sheet) implemented
+
+### What was done
+
+- Locked the visual direction via the impeccable decision page: **The Interchange Sheet** (transit wayfinding x orienteering; re-roll round 1, assigned index 4; seed:80703b4f4a3833dc). The chosen first-viewport sketch is the composition contract: `.impeccable/mocks/decision/assigned.html`.
+- Shape brief confirmed by the user; direction contract written to `.impeccable/surfaces/extension.md` (six blocks + seed + verbatim FINISH).
+- Implemented M1 in `extension/`: secondary-sidebar webview view (`viewsContainers.secondarySidebar`, VS Code >= 1.106; engines floor bumped, `@types/vscode@1.106.0`), `HistoryViewProvider` (nonce CSP, message protocol), SVG renderer (`media/graph.js`, `media/view.css`): lane layout with 45-degree branch forks, course thread + numbered control rings on the spine, ghost dashes for abandoned visited legs, junction halos, active row flood + strong ring, day/night/high-contrast renditions, keyboard-focusable stations, context menu (switch/delete), empty/error states, one-inversion flash on active change (reduced-motion safe).
+- Engine: `switchToCheckpoint` (auto-save safety checkpoint when dirty; skips the file rewrite when clean), `deleteCheckpoint` (children reattach; active moves to parent; origin protected), visited tracking via `.evograph/state.json`, `getGraphModel`, storage primitives (`getTreeOid`, `removeCheckpointRef`, state read/write). The command "Switch to Checkpoint…" replaces the modal restore flow.
+- Preview harness `extension/preview/index.html` (stub API + sample model) for headless renders.
+- Evidence captured into `.impeccable/review/` (night/day/high-contrast, empty/error/focus, 320/560 widths, branch crops); mechanical detector run: clean. Finish reviewer spawned (fresh subagent executing the degraded finish-reviewer procedure).
+
+### Interface changes made
+
+- New: `CheckpointEngine.switchToCheckpoint`, `deleteCheckpoint`, `getGraphModel`; `ShadowGitStore.getTreeOid/removeCheckpointRef/readState/writeState`; `HistoryViewProvider`; command id `evograph.restoreCheckpoint` -> `evograph.switchCheckpoint` (plus `evograph.openGraph`); manifest gains `viewsContainers.secondarySidebar` + `views`; engines/type floor 1.106.
+
+### What I struggled with / broke
+
+- Headless screenshot race: the first capture round fired before the harness dispatched its model (all frames identical, ~3.3KB). Fixed by dispatching synchronously after graph.js loads, and surfacing harness errors onto the page.
+- An edit to the harness briefly left a double-dispatch + undefined model reference; rewrote the file cleanly.
+- Ghost dashes blended into the blue branch link; fixed by offsetting the ghost 5px parallel (`translate(-5 0)`).
+- Long titles clipped at the fixed SVG viewBox; fixed by measuring rendered text bounding boxes after render and updating the viewBox (and hit/flood widths) accordingly.
+- The focus-state screenshot does not show the ring in the CLI capture pipeline (programmatic focus); the ring was verified live via DOM (`:focus-visible` matches; ring rgb(55,148,255) at 2px). Not a build defect.
+
+### Test status
+
+```
+npm run check (extension/): lint clean; typecheck clean; vitest 30/30 passed; compile clean.
+Mechanical design detector (extension/media, extension/preview): no findings.
+```
+
+### Handoff to next agent
+
+- Finish-review verdict pending (subagent `ses_e91ba62b8ffe9LuV6bH6qM9sHN`). After the disposition: fixes if any, then the documenter pass (DESIGN.md + `.impeccable/design.json` are required — this is a new world), then commit + push ask, then dogfood M1 (F5; the panel is in the secondary sidebar).
+- If iterating on the panel visuals: keep the tokens in `media/view.css` and the direction contract; the preview harness is the fast loop.
+
 ## 2026-10-24 (cont. 4) -- M0 dogfood passed; M0 closed
 
 ### What was done
