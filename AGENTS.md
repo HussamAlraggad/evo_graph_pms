@@ -47,6 +47,12 @@ cp -rf source dest          # NOT: cp -r source dest
 - `apt-get` - use `-y` flag
 - `brew` - use `HOMEBREW_NO_AUTO_UPDATE=1` env var
 
+## Research & Tooling Notes
+
+- Before batching tool calls, read each tool's required parameters from the catalog. Missing required args (e.g., `firecrawl_research_related_papers.intent`) can silently return empty results instead of raising errors.
+- Keep Firecrawl scrape concurrency moderate (about 8 or fewer scrapes per batch); the API rate-limits at ~11 requests/min and partial failures are easy to miss inside batched `Promise.allSettled` results. Prefer search snippets over full scrapes when full text is not needed.
+- "EvoGraph" is overloaded (14+ distinct works/products). Always qualify which EvoGraph is meant: the IDE plugin (arXiv:2604.18883), the Software 3.0 framework (arXiv:2508.05199), or an unrelated same-name work (see the disambiguation table in `history/evograph-ide-research.md`).
+
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:7510c1e2 -->
 ## Beads Issue Tracker
 
