@@ -211,6 +211,11 @@
       const labelSpace = graph.width - (x + 22) - 14;
       const titleText = ellipsize(checkpoint.title, labelSpace, 7);
       const tagRest = ellipsize(tagParts.slice(1).join(" · "), labelSpace, 5.2);
+      const titleEst = Math.min(labelSpace, titleText.length * 7);
+      const tagEst = Math.min(labelSpace, (tagParts[0].length + tagRest.length + 3) * 5.2);
+      const plate =
+        '<rect class="plate" x="' + (x + 16) + '" y="' + (nodeY - 13) + '" width="' +
+        (Math.max(titleEst, tagEst) + 12) + '" height="36" rx="2"/>';
       const rowWidth = Math.max(160, graph.width - (x - 34) - 10);
       const flood = isActive
         ? '<rect class="flood" x="' + (x - 30) + '" y="' + (nodeY - 24) + '" width="' +
@@ -229,6 +234,7 @@
         esc(checkpoint.id) + '" aria-label="' +
         esc(checkpoint.title + ", " + tagParts.join(", ")) + '">' +
         "<title>" + esc(checkpoint.title) + "</title>" +
+        plate +
         flood +
         '<rect class="hit" x="' + (x - 34) + '" y="' + (nodeY - 26) + '" width="' + rowWidth + '" height="56"/>' +
         mark +

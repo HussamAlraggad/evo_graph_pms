@@ -229,6 +229,9 @@ svg text {
 .flood {
   fill: var(--flood);
 }
+.plate {
+  fill: var(--ground);
+}
 .hit {
   fill: transparent;
 }
