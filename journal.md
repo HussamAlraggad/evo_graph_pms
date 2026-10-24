@@ -1,5 +1,30 @@
 # Journal
 
+## 2026-10-24 (cont. 9) -- Dogfood fix confirmed live; M1 pushed
+
+### What was done
+
+- User confirmed the label-plate fix in the live Extension Development Host ("that's much better") — first post-fix dogfood validation.
+- Pushed 8 local commits (M0-close, the M1 milestone, the dogfood fix + design record) to `origin/main`; `bd dolt push` synced the beads data.
+
+### Interface changes made
+
+- None.
+
+### What I struggled with / broke
+
+- Nothing.
+
+### Test status
+
+Not applicable — no code changed since the green gate; push only.
+
+### Handoff to next agent
+
+- M1 is done end-to-end: shipped, reviewed, documented, dogfood-validated, pushed.
+- M2 (`evo_graph_pms-0zj`) is ready: the assistant loop (minimal chat panel, AI prompt/applied checkpoint capture, pluggable model provider — provider choice still open). It extends the established sheet world via `DESIGN.md` rather than establishing a new one.
+- The user has research insights to share that may affect M2-M4 priorities — capture them before starting M2.
+
 ## 2026-10-24 (cont. 8) -- First live dogfood: label-knockout fix + verified live store
 
 ### What was done
