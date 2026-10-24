@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>The Category Standard — sketch</title>
+<style>
+  :root{--ground:#1e1e1e;--ink:#d4d4d4;--dim:#808080;--faint:#3c3c3c;--accent:#3794ff}
+  *{box-sizing:border-box}
+  body{margin:0;width:420px;height:900px;overflow:hidden;background:var(--ground);color:var(--ink);
+    font-family:"Segoe UI",system-ui,sans-serif}
+  .panel{position:relative;width:420px;height:900px}
+  header{display:flex;justify-content:space-between;align-items:baseline;padding:16px 18px 12px;border-bottom:1px solid #2b2b2b}
+  header h1{margin:0;font-size:12.5px;font-weight:600;letter-spacing:.02em}
+  header .count{font-size:11px;color:var(--dim)}
+  .rail{position:absolute;left:72px;top:118px;bottom:90px;width:1px;background:var(--faint)}
+  .branch{position:absolute;left:106px;top:430px;bottom:90px;width:1px;background:var(--faint)}
+  .link{position:absolute;left:72px;top:414px;width:48px;height:1px;background:var(--faint);transform:rotate(45deg);transform-origin:left center}
+  .dot{position:absolute;left:66px;width:13px;height:13px;border-radius:50%;background:var(--ground);border:1.5px solid var(--ink)}
+  .dot.b{left:100px}
+  .dot.on{border:2px solid var(--accent);box-shadow:0 0 0 3px rgba(55,148,255,.22)}
+  .node{position:absolute;left:92px}
+  .node.b{left:126px}
+  .node h3{margin:0 0 2px;font-size:12px;font-weight:400;letter-spacing:.01em}
+  .node.on h3{color:#ffffff}
+  .node small{font-size:10px;color:var(--dim)}
+  .tag{display:inline-block;margin-left:7px;padding:1px 6px;border:1px solid var(--accent);border-radius:8px;
+    font-size:9px;color:var(--accent);letter-spacing:.04em;vertical-align:1px}
+  footer{position:absolute;left:18px;right:18px;bottom:24px;padding-top:10px;border-top:1px solid #2b2b2b;
+    display:flex;justify-content:space-between;font-size:10px;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="panel">
+  <header><h1>EvoGraph</h1><span class="count">6 checkpoints</span></header>
+
+  <div class="rail"></div>
+  <div class="branch"></div>
+  <div class="link"></div>
+
+  <div class="dot" style="top:150px"></div>
+  <div class="node" style="top:144px"><h3>Origin</h3><small>12:44 &middot; origin</small></div>
+
+  <div class="dot" style="top:240px"></div>
+  <div class="node" style="top:234px"><h3>Changed README.md</h3><small>12:57 &middot; manual</small></div>
+
+  <div class="dot" style="top:330px"></div>
+  <div class="node" style="top:324px"><h3>Changed 4 files</h3><small>13:02 &middot; manual</small></div>
+
+  <div class="dot on" style="top:450px"></div>
+  <div class="node on" style="top:442px"><h3>Changed login.ts<span class="tag">active</span></h3><small>13:40 &middot; manual</small></div>
+
+  <div class="dot b" style="top:560px"></div>
+  <div class="node b" style="top:554px"><h3>Changed auth-flow.ts</h3><small>13:18 &middot; manual</small></div>
+
+  <footer><span>6 checkpoints</span><span>2 branches</span></footer>
+</div>
+</body>
+</html>

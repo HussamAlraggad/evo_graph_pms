@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Split-Flap Board — sketch</title>
+<style>
+  :root{
+    --ground:#0b0b0d; --steel:#2a2d31; --steel-mid:#5b5e63; --steel-light:#8b8f94;
+    --flap:#0e0f11; --flap-line:#1c1e21; --white:#f2f2f2; --amber:#ffb000; --red:#b00020;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;width:420px;height:900px;overflow:hidden;background:var(--ground);color:var(--white);
+    font-family:"Arial Narrow","Helvetica Neue",system-ui,sans-serif}
+  .panel{position:relative;width:420px;height:900px;border:6px solid var(--steel)}
+  header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 12px;
+    border-bottom:1px solid var(--steel)}
+  header h1{margin:0;font-size:14px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+  .live{display:flex;align-items:center;gap:7px;font-size:10px;letter-spacing:.18em;color:var(--steel-light);text-transform:uppercase}
+  .live i{width:8px;height:8px;border-radius:50%;background:var(--amber);display:inline-block}
+  .cols{display:grid;grid-template-columns:52px 1fr 58px 66px;gap:8px;padding:10px 16px 6px;
+    font-size:8.5px;letter-spacing:.18em;color:var(--steel-mid);text-transform:uppercase}
+  .row{display:grid;grid-template-columns:52px 1fr 58px 66px;gap:8px;align-items:center;
+    padding:8px 16px;border-bottom:1px solid #17181b}
+  .row.active{background:#121316;box-shadow:inset 3px 0 0 var(--amber)}
+  .time{font-size:11px;letter-spacing:.08em;color:var(--steel-light)}
+  .row.active .time{color:var(--white)}
+  .flaps{background:repeating-linear-gradient(90deg,var(--flap) 0 8px,var(--flap-line) 8px 9px);
+    border:1px solid #202327;padding:2.5px 6px;font-size:11px;font-weight:600;letter-spacing:1.6px;
+    white-space:nowrap;overflow:hidden}
+  .row.active .flaps{border-color:#2c3035}
+  .type{font-size:9.5px;letter-spacing:.12em;color:var(--steel-light);text-transform:uppercase}
+  .state{font-size:10px;letter-spacing:.14em;text-transform:uppercase;text-align:right}
+  .state.active{color:var(--amber);font-weight:700}
+  .state.filed{color:var(--steel-light)}
+  .note{position:absolute;left:16px;right:16px;bottom:20px;padding-top:10px;border-top:1px solid var(--steel);
+    display:flex;justify-content:space-between;font-size:8.5px;letter-spacing:.16em;color:var(--steel-mid);text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="panel">
+  <header>
+    <h1>Checkpoint Board</h1>
+    <span class="live"><i></i>Live &middot; 6</span>
+  </header>
+
+  <div class="cols">
+    <span>Time</span><span>Record</span><span>Type</span><span>State</span>
+  </div>
+
+  <div class="row active">
+    <span class="time">12:40</span>
+    <span class="flaps">CHANGED LOGIN.TS</span>
+    <span class="type">Manual</span>
+    <span class="state active">Active</span>
+  </div>
+  <div class="row">
+    <span class="time">12:18</span>
+    <span class="flaps">CHANGED AUTH-FLOW.TS</span>
+    <span class="type">Manual</span>
+    <span class="state filed">Filed</span>
+  </div>
+  <div class="row">
+    <span class="time">12:02</span>
+    <span class="flaps">CHANGED 4 FILES</span>
+    <span class="type">Manual</span>
+    <span class="state filed">Filed</span>
+  </div>
+  <div class="row">
+    <span class="time">11:57</span>
+    <span class="flaps">CHANGED README.MD</span>
+    <span class="type">Manual</span>
+    <span class="state filed">Filed</span>
+  </div>
+  <div class="row">
+    <span class="time">11:44</span>
+    <span class="flaps">ORIGIN</span>
+    <span class="type">Origin</span>
+    <span class="state filed">Filed</span>
+  </div>
+
+  <div class="note">
+    <span>Rows = records</span>
+    <span>Updates clack in place</span>
+  </div>
+</div>
+</body>
+</html>

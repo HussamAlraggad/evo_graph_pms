@@ -1,0 +1,214 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-24T14:44:01Z",
+  "title": "Design System: The Interchange Sheet",
+  "extensions": {
+    "colorMeta": {
+      "course-violet": {
+        "role": "primary",
+        "displayName": "Course Violet",
+        "canonical": "#7b2cbf",
+        "tonalRamp": ["#5b1d99", "#7b2cbf", "#9b6bd3", "#c9a1f5"]
+      },
+      "course-violet-deep": {
+        "role": "primary",
+        "displayName": "Course Violet Deep",
+        "canonical": "#5b1d99",
+        "tonalRamp": ["#3d1069", "#5b1d99", "#d9c2f5", "#e6d6ff"]
+      },
+      "course-flood": {
+        "role": "primary",
+        "displayName": "Course Flood",
+        "canonical": "rgba(123, 44, 191, 0.14)",
+        "tonalRamp": ["rgba(123, 44, 191, 0.14)", "rgba(91, 29, 153, 0.16)", "rgba(155, 107, 211, 0.2)", "rgba(201, 161, 245, 0.26)"]
+      },
+      "course-hover-tint": {
+        "role": "primary",
+        "displayName": "Course Hover Tint",
+        "canonical": "rgba(123, 44, 191, 0.07)",
+        "tonalRamp": ["rgba(123, 44, 191, 0.07)", "rgba(91, 29, 153, 0.08)", "rgba(155, 107, 211, 0.1)", "rgba(201, 161, 245, 0.16)"]
+      },
+      "branch-blue": {
+        "role": "secondary",
+        "displayName": "Branch Blue",
+        "canonical": "#5fa7d6",
+        "tonalRamp": ["#0b5f96", "#5fa7d6", "#6fb6e3", "#93d2ff"]
+      },
+      "prompt-olive": {
+        "role": "tertiary",
+        "displayName": "Prompt Olive",
+        "canonical": "#5f6c2d",
+        "tonalRamp": ["#4f5c26", "#5f6c2d", "#b9c77e", "#d3e08f"]
+      },
+      "applied-amber": {
+        "role": "tertiary",
+        "displayName": "Applied Amber",
+        "canonical": "#8a5f00",
+        "tonalRamp": ["#7a5400", "#8a5f00", "#e0b34c", "#ffd98a"]
+      },
+      "paper-ground": {
+        "role": "neutral",
+        "displayName": "Paper Ground",
+        "canonical": "#f5f4f0",
+        "tonalRamp": ["#000000", "#121417", "#f5f4f0", "#ffffff"]
+      },
+      "sheet-ink": {
+        "role": "neutral",
+        "displayName": "Sheet Ink",
+        "canonical": "#111111",
+        "tonalRamp": ["#000000", "#111111", "#e8ebef", "#ffffff"]
+      },
+      "faded-ink": {
+        "role": "neutral",
+        "displayName": "Faded Ink",
+        "canonical": "#6f6d68",
+        "tonalRamp": ["#333333", "#6f6d68", "#98a1ab", "#d6d6d6"]
+      },
+      "rule-hairline": {
+        "role": "neutral",
+        "displayName": "Rule Hairline",
+        "canonical": "#d9d7d0",
+        "tonalRamp": ["#2a2f36", "#6f6f6f", "#767676", "#d9d7d0"]
+      }
+    },
+    "typographyMeta": {
+      "sheet-title": { "displayName": "Sheet Title", "purpose": "Checkpoint file in the header strip; the widest tracking in the system." },
+      "state-title": { "displayName": "State Title", "purpose": "Empty, error and no-folder card headings." },
+      "station-title": { "displayName": "Station Name", "purpose": "Checkpoint names on the sheet; the tightest tracking, ellipsized on a character budget, never wrapped." },
+      "prose": { "displayName": "Prose", "purpose": "State card body: the system's only sentence-case running text, and the only text allowed to wrap." },
+      "micro-tag": { "displayName": "Micro-tag", "purpose": "The type · time · active line under each station name; provenance lives here." },
+      "sheet-meta": { "displayName": "Sheet Meta", "purpose": "Footer legend and rendition note; the header's record count is the same size one step wider (0.16em)." },
+      "ring-number": { "displayName": "Ring Number", "purpose": "Control order printed beside each control ring, counting the course from the origin to the active checkpoint." }
+    },
+    "shadows": [
+      { "name": "floating-platform-chrome", "value": "0 4px 12px rgba(0, 0, 0, 0.35)", "purpose": "Context menu only — platform chrome floating over the flat sheet. The sheet itself has no shadow vocabulary." }
+    ],
+    "motion": [
+      { "name": "evograph-invert", "value": "170ms ease-out", "purpose": "Whole-sheet invert flash when the active checkpoint changes; dropped under prefers-reduced-motion." },
+      { "name": "hard-cut-states", "value": "0ms (no transition declared)", "purpose": "Hover, selection, focus and menu changes are instant; the stylesheet declares no transition properties at all." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Checkpoint Station — On Course",
+      "kind": "custom",
+      "refersTo": "checkpoint-station",
+      "description": "The atom of the sheet: a numbered control ring with the station name 22px right of the control centre and the type · time micro-tag 15px below it, on a 56px hit row. Ring r=9, stroke 2.5, filled with the ground so the course thread passes behind the control.",
+      "html": "<svg class=\"ds-st\" viewBox=\"0 0 420 84\" width=\"100%\" height=\"84\" role=\"img\" aria-label=\"Checkpoint 2, Changed README.md, manual, 12:48\"><g class=\"ds-st-row\" tabindex=\"0\" role=\"button\"><rect class=\"ds-st-hit\" x=\"30\" y=\"16\" width=\"380\" height=\"56\"/><circle class=\"ds-st-ring\" cx=\"64\" cy=\"44\" r=\"9\"/><text class=\"ds-st-num\" x=\"38\" y=\"48\">2</text><text class=\"ds-st-name\" x=\"86\" y=\"46\">CHANGED README.MD</text><text class=\"ds-st-tag\" x=\"86\" y=\"61\"><tspan>manual</tspan><tspan> · 12:48</tspan></text><rect class=\"ds-st-focus\" x=\"30\" y=\"16\" width=\"380\" height=\"56\" rx=\"2\"/></g></svg>",
+      "css": ".ds-st { display: block; background: #f5f4f0; } .ds-st-row { cursor: pointer; outline: none; } .ds-st-hit { fill: transparent; } .ds-st-row:hover .ds-st-hit { fill: rgba(123, 44, 191, 0.07); } .ds-st-row.is-pending { opacity: 0.55; } .ds-st-ring { fill: #f5f4f0; stroke: #7b2cbf; stroke-width: 2.5; } .ds-st-num { fill: #7b2cbf; font-family: 'Roboto Condensed Signage', 'Arial Narrow', 'Helvetica Neue', system-ui, sans-serif; font-size: 11px; font-weight: 700; } .ds-st-name { fill: #111111; font-family: 'Roboto Condensed Signage', 'Arial Narrow', 'Helvetica Neue', system-ui, sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; } .ds-st-tag { fill: #6f6d68; font-family: 'Roboto Condensed Signage', 'Arial Narrow', 'Helvetica Neue', system-ui, sans-serif; font-size: 8.5px; letter-spacing: 0.14em; text-transform: uppercase; } .ds-st-focus { fill: none; stroke: none; } .ds-st-row:focus-visible .ds-st-focus { stroke: #0090f1; stroke-width: 2; }"
+    },
+    {
+      "name": "Active Checkpoint — Flooded Row",
+      "kind": "custom",
+      "refersTo": "checkpoint-station-active",
+      "description": "The current checkpoint: the ring keeps its place and takes r=11 with a 3.5px stroke, a 14% course flood covers a 52px band (2px radius) behind the row, and the micro-tag switches to course-violet-deep with · active appended.",
+      "html": "<svg class=\"ds-act\" viewBox=\"0 0 420 84\" width=\"100%\" height=\"84\" role=\"img\" aria-label=\"Checkpoint 5, Changed session-manager.ts and 11 other files, manual, 14:20, active\"><g class=\"ds-act-row\" tabindex=\"0\" role=\"button\"><rect class=\"ds-act-flood\" x=\"34\" y=\"20\" width=\"376\" height=\"52\" rx=\"2\"/><rect class=\"ds-act-hit\" x=\"30\" y=\"16\" width=\"380\" height=\"56\"/><circle class=\"ds-act-ring\" cx=\"64\" cy=\"44\" r=\"11\"/><text class=\"ds-act-num\" x=\"38\" y=\"48\">5</text><text class=\"ds-act-name\" x=\"86\" y=\"46\">CHANGED SESSION-MANAGER.TS AND 11 OTH…</text><text class=\"ds-act-tag\" x=\"86\" y=\"61\"><tspan>manual</tspan><tspan> · 14:20 · active</tspan></text><rect class=\"ds-act-focus\" x=\"30\" y=\"16\" width=\"380\" height=\"56\" rx=\"2\"/></g></svg>",
+      "css": ".ds-act { display: block; background: #f5f4f0; } .ds-act-row { cursor: pointer; outline: none; } .ds-act-flood { fill: rgba(123, 44, 191, 0.14); } .ds-act-hit { fill: transparent; } .ds-act-row:hover .ds-act-hit { fill: rgba(123, 44, 191, 0.07); } .ds-act-ring { fill: #f5f4f0; stroke: #7b2cbf; stroke-width: 3.5; } .ds-act-num { fill: #7b2cbf; font-family: 'Roboto Condensed Signage', 'Arial Narrow', 'Helvetica Neue', system-ui, sans-serif; font-size: 11px; font-weight: 700; } .ds-act-name { fill: #111111; font-family: 'Roboto Condensed Signage', 'Arial Narrow', 'Helvetica Neue', system-ui, sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; } .ds-act-tag { fill: #5b1d99; font-family: 'Roboto Condensed Signage', 'Arial Narrow', 'Helvetica Neue', system-ui, sans-serif; font-size: 8.5px; letter-spacing: 0.14em; text-transform: uppercase; } .ds-act-focus { fill: none; stroke: none; } .ds-act-row:focus-visible .ds-act-focus { stroke: #0090f1; stroke-width: 2; }"
+    },
+    {
+      "name": "Off-Course Station — Tick",
+      "kind": "custom",
+      "refersTo": "checkpoint-station-off-course",
+      "description": "A checkpoint off the course: no ring, no number, no course colour — a 22 × 2px ink bar instead. Provenance colour lives only in the type span of the micro-tag: prompt-olive here, applied-amber for AI applied, faded ink for origin and manual.",
+      "html": "<svg class=\"ds-tick\" viewBox=\"0 0 420 84\" width=\"100%\" height=\"84\" role=\"img\" aria-label=\"Checkpoint 7, Prompt: fix the race condition, AI prompt, 14:26\"><g class=\"ds-tick-row\" tabindex=\"0\" role=\"button\"><rect class=\"ds-tick-hit\" x=\"30\" y=\"16\" width=\"380\" height=\"56\"/><line class=\"ds-tick-bar\" x1=\"53\" y1=\"44\" x2=\"75\" y2=\"44\"/><text class=\"ds-tick-name\" x=\"86\" y=\"46\">PROMPT: FIX THE RACE CONDITION</text><text class=\"ds-tick-tag\" x=\"86\" y=\"61\"><tspan class=\"ds-tick-type\">AI prompt</tspan><tspan> · 14:26</tspan></text><rect class=\"ds-tick-focus\" x=\"30\" y=\"16\" width=\"380\" height=\"56\" rx=\"2\"/></g></svg>",
+      "css": ".ds-tick { display: block; background: #f5f4f0; } .ds-tick-row { cursor: pointer; outline: none; } .ds-tick-hit { fill: transparent; } .ds-tick-row:hover .ds-tick-hit { fill: rgba(123, 44, 191, 0.07); } .ds-tick-bar { stroke: #111111; stroke-width: 2; } .ds-tick-name { fill: #111111; font-family: 'Roboto Condensed Signage', 'Arial Narrow', 'Helvetica Neue', system-ui, sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; } .ds-tick-tag { fill: #6f6d68; font-family: 'Roboto Condensed Signage', 'Arial Narrow', 'Helvetica Neue', system-ui, sans-serif; font-size: 8.5px; letter-spacing: 0.14em; text-transform: uppercase; } .ds-tick-type { fill: #5f6c2d; } .ds-tick-focus { fill: none; stroke: none; } .ds-tick-row:focus-visible .ds-tick-focus { stroke: #0090f1; stroke-width: 2; }"
+    },
+    {
+      "name": "Routed Lines — Trunk, Course, Branch, Ghost",
+      "kind": "custom",
+      "refersTo": "course-thread",
+      "description": "The network in four strokes: a 7px ink trunk with gaps (it leaves an on-course station 30px below and stops 26px above the next; 8px where a side is off the course), a 4.5px violet course thread drawn whole over it, a 7px blue branch peeling at a true 45° elbow, and the abandoned leg as a 3.5px violet 9/7 dash at 80% opacity, offset 5px left. Rings are filled with the ground, so the thread runs behind the controls.",
+      "html": "<svg class=\"ds-line\" viewBox=\"0 0 200 200\" width=\"200\" height=\"200\" role=\"img\" aria-label=\"Routed line vocabulary: ink trunk, violet course thread, blue branch, dashed violet ghost leg\"><path class=\"ds-line-trunk\" d=\"M 64 6 V 14 M 64 74 V 94 M 64 154 V 190\"/><path class=\"ds-line-thread\" d=\"M 64 6 V 190\"/><path class=\"ds-line-branch\" d=\"M 64 94 V 100 L 140 176 V 190\"/><path class=\"ds-line-ghost\" transform=\"translate(-5 0)\" d=\"M 64 94 V 100 L 140 176 V 190\"/><circle class=\"ds-line-ring\" cx=\"64\" cy=\"44\" r=\"9\"/><circle class=\"ds-line-ring\" cx=\"64\" cy=\"124\" r=\"9\"/></svg>",
+      "css": ".ds-line { display: block; background: #f5f4f0; } .ds-line-trunk { fill: none; stroke: #111111; stroke-width: 7; } .ds-line-thread { fill: none; stroke: #7b2cbf; stroke-width: 4.5; stroke-linecap: round; } .ds-line-branch { fill: none; stroke: #5fa7d6; stroke-width: 7; } .ds-line-ghost { fill: none; stroke: #7b2cbf; stroke-width: 3.5; opacity: 0.8; stroke-dasharray: 9 7; } .ds-line-ring { fill: #f5f4f0; stroke: #7b2cbf; stroke-width: 2.5; }"
+    },
+    {
+      "name": "Sheet Header",
+      "kind": "custom",
+      "refersTo": "sheet-header",
+      "description": "The sheet's top strip: file name at 12px/700 with the system's widest tracking, record count at 8.5px against the right edge, over a 1px rule. The build appends the rendition note ( · day map / · night race) from the live theme; it is written literally here.",
+      "html": "<div class=\"ds-head\"><h1 class=\"ds-head-title\">Checkpoint file</h1><span class=\"ds-head-count\">8 records · day map</span></div>",
+      "css": ".ds-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 12px 14px 9px; border-bottom: 1px solid #d9d7d0; background: #f5f4f0; } .ds-head-title { margin: 0; color: #111111; font-family: 'Roboto Condensed Signage', 'Arial Narrow', 'Helvetica Neue', system-ui, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; } .ds-head-count { color: #6f6d68; font-family: 'Roboto Condensed Signage', 'Arial Narrow', 'Helvetica Neue', system-ui, sans-serif; font-size: 8.5px; letter-spacing: 0.16em; text-transform: uppercase; white-space: nowrap; }"
+    },
+    {
+      "name": "Sheet Footer — Legend",
+      "kind": "custom",
+      "refersTo": "sheet-footer",
+      "description": "The sheet's bottom strip: three miniaturised 22 × 6px line keys (course, ghost, branch) under a 1px rule, plus the reading instruction read down = time. Swatches are drawn at stroke-width 3 and the ghost dash shrinks to 4/3 so the legend reads as a key, not as map geometry.",
+      "html": "<div class=\"ds-foot\"><span class=\"ds-foot-legend\"><span class=\"ds-foot-item\"><svg class=\"ds-foot-key\" viewBox=\"0 0 22 6\" width=\"22\" height=\"6\" aria-hidden=\"true\"><line class=\"ds-foot-course\" x1=\"1\" y1=\"3\" x2=\"21\" y2=\"3\"/></svg>course</span><span class=\"ds-foot-item\"><svg class=\"ds-foot-key\" viewBox=\"0 0 22 6\" width=\"22\" height=\"6\" aria-hidden=\"true\"><line class=\"ds-foot-ghost\" x1=\"1\" y1=\"3\" x2=\"21\" y2=\"3\"/></svg>ghost</span><span class=\"ds-foot-item\"><svg class=\"ds-foot-key\" viewBox=\"0 0 22 6\" width=\"22\" height=\"6\" aria-hidden=\"true\"><line class=\"ds-foot-branch\" x1=\"1\" y1=\"3\" x2=\"21\" y2=\"3\"/></svg>branch</span></span><span>read down = time</span></div>",
+      "css": ".ds-foot { display: flex; justify-content: space-between; gap: 10px; padding: 9px 14px; border-top: 1px solid #d9d7d0; background: #f5f4f0; color: #6f6d68; font-family: 'Roboto Condensed Signage', 'Arial Narrow', 'Helvetica Neue', system-ui, sans-serif; font-size: 8.5px; letter-spacing: 0.12em; text-transform: uppercase; } .ds-foot-legend { display: flex; flex-wrap: wrap; gap: 10px; } .ds-foot-item { vertical-align: middle; } .ds-foot-key { vertical-align: middle; margin-right: 5px; } .ds-foot-key line { stroke-width: 3; } .ds-foot-course { stroke: #7b2cbf; } .ds-foot-ghost { stroke: #7b2cbf; stroke-dasharray: 4 3; } .ds-foot-branch { stroke: #5fa7d6; }"
+    },
+    {
+      "name": "State Card — Empty Sheet",
+      "kind": "card",
+      "refersTo": "state-card",
+      "description": "The sheet with no records: a full-width card with a 1px dashed rule-coloured border, seated in a 26px 16px well. The dash is the same ghost vocabulary as an abandoned leg — nothing has been ridden here. Title at 12px/700 caps, body as the system's only sentence-case prose.",
+      "html": "<div class=\"ds-state\"><div class=\"ds-card\"><p class=\"ds-card-title\">No records yet</p><p class=\"ds-card-body\">The file starts with your first checkpoint. Uncheckpointed work is snapshotted automatically when you switch.</p></div></div>",
+      "css": ".ds-state { padding: 26px 16px; display: flex; background: #f5f4f0; } .ds-card { border: 1px dashed #d9d7d0; padding: 16px 16px 14px; width: 100%; } .ds-card-title { margin: 0 0 6px; color: #111111; font-family: 'Roboto Condensed Signage', 'Arial Narrow', 'Helvetica Neue', system-ui, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; } .ds-card-body { margin: 0; color: #6f6d68; font-family: 'Roboto Condensed Signage', 'Arial Narrow', 'Helvetica Neue', system-ui, sans-serif; font-size: 11.5px; line-height: 1.5; }"
+    },
+    {
+      "name": "State Action Button",
+      "kind": "button",
+      "refersTo": "state-action",
+      "description": "The sheet's only true button — Create checkpoint in the empty sheet, Retry in the error sheet. Colours are the platform's button tokens (day-rendition values written literally here; the live ones come from the VS Code theme), square, 5px 12px, with a 2px platform focus outline at 1px offset. Its lettering comes from the sheet's face by inheritance and it declares no face of its own.",
+      "html": "<button type=\"button\" class=\"ds-btn\">Create checkpoint</button>",
+      "css": ".ds-btn { padding: 5px 12px; color: #ffffff; background: #0078d4; border: none; border-radius: 0; cursor: pointer; font-family: 'Roboto Condensed Signage', 'Arial Narrow', 'Helvetica Neue', system-ui, sans-serif; font-size: 11.5px; font-weight: 400; } .ds-btn:hover { background: #026ec1; } .ds-btn:focus-visible { outline: 2px solid #0090f1; outline-offset: 1px; }"
+    },
+    {
+      "name": "Context Menu",
+      "kind": "nav",
+      "refersTo": "context-menu",
+      "description": "Platform chrome inside the sheet, on right-click or Shift+F10: native menu tokens and the platform UI face, and the only shadow in the system. The dark values shown are the defaults the stylesheet carries; a live VS Code theme supplies the real ones. Two items — Switch to this checkpoint, Delete….",
+      "html": "<div class=\"ds-menu\" role=\"menu\"><button type=\"button\" class=\"ds-menu-item\" role=\"menuitem\">Switch to this checkpoint</button><button type=\"button\" class=\"ds-menu-item\" role=\"menuitem\">Delete…</button></div>",
+      "css": ".ds-menu { min-width: 170px; padding: 4px 0; font-family: -apple-system, 'Segoe UI', system-ui, sans-serif; background: #252526; color: #cccccc; border: 1px solid #454545; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35); } .ds-menu-item { display: block; width: 100%; text-align: left; padding: 5px 14px; background: none; border: none; color: inherit; font: inherit; font-size: 12px; cursor: pointer; } .ds-menu-item:hover, .ds-menu-item:focus { background: #094771; color: #ffffff; outline: none; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Interchange Sheet",
+    "overview": "The checkpoint file is printed, not rendered. The panel is one sheet in three strips — a header that names the file, its record count and its rendition; a routed canvas; a footer legend — and everything on it obeys two printed languages at once: transit wayfinding (routes, stations, a legend, time read downward) and an orienteering course map (numbered controls, a course thread, control descriptions set in tiny caps). The ground is paper in the light theme and night in the dark theme, and the sheet names which it is: day map or night race. The theme chooses the rendition; it never changes the artifact.\n\nTwo drawings share the page. The first is the network: an ink trunk routed at true 45° elbows, alternate branches peeling right in pale blue, stations marked either as numbered control rings (on the course) or as a plain 22px ink bar (everything off it). The second is the course laid over it: one violet thread through the rings that the developer actually rode, dashed violet ghosts where an abandoned leg still hangs, and a tinted flood across the active control's row. The signature move is that the course redraws whole on every switch and the sheet inverts for 170ms — the ride is visible as one printed act, not a sequence of component updates.\n\nDensity is instrument-like. Type stays between 8.5px and 12px, uppercase almost everywhere, with hierarchy carried by weight, tracking and color rather than size. Three hairlines and one tinted band do all the layering, and there is exactly one shadow in the system — on a floating menu that is not part of the sheet. It refuses the category's dot-and-hairline git graph: routes here are 7px, turns are 45°, and every checkpoint holds a place on a course rather than a row in a list.",
+    "keyCharacteristics": [
+      "A sheet in three strips: header (title, record count, rendition note), routed canvas, footer legend — one 1px rule each side of the canvas.",
+      "Transit geometry: a 76px lane step, an 84px row pitch, true 45° elbows, 7px routed trunks with a 4.5px violet thread riding on top.",
+      "Orienteering vocabulary: numbered control rings, ghost dashes for abandoned legs, a flood on the active control, a 22px tick for everything off the course.",
+      "Two renditions of one identity: day map and night race. Ground, ink, dim and rule follow the theme; the four accents keep their identity and only retune for contrast.",
+      "One bundled condensed signage face, 8.5–12px, uppercase — hierarchy by weight, tracking and color.",
+      "Depth without shadows: hairlines, a tinted band, punched rings, and layer order.",
+      "Motion is a single event: a 170ms invert flash when the active checkpoint changes. Every other state change is hard-cut — there is not one transition in the stylesheet."
+    ],
+    "rules": [
+      { "name": "The Ridden Path Rule", "body": "Violet is the record of the ride. The course thread, the control rings, their numbers, the ghost dashes, the flood and the hover wash are violet because the developer has been there; a violet mark that records nothing is a lie about the history.", "section": "colors" },
+      { "name": "The Branch Borrows Blue Rule", "body": "Blue belongs to branch lines and their legend key — nowhere else. A branch never marks selection, action, or the active checkpoint; the trunk stays ink so that \"the main line\" and \"a line taken\" are told apart by colour and not only by position.", "section": "colors" },
+      { "name": "The Provenance Stays In The Tag Rule", "body": "Olive (\"AI prompt\") and amber (\"AI applied\") exist for two strings at 8.5px in the micro-tag. Origin and manual records stay faded ink. A checkpoint's type never colours its line, its ring, or its row — provenance is a label on a station, never a route.", "section": "colors" },
+      { "name": "The Twelve-Pixel Ceiling Rule", "body": "Nothing on the sheet is larger than 12px. Hierarchy is carried by weight, caps, tracking and colour — never by a size jump. A surface that needs a 20px heading is not this sheet.", "section": "typography" },
+      { "name": "The One Lowercase Sentence Rule", "body": "Every string on the sheet is uppercase except the state card's body copy — the single sentence of advice, the single tier with a declared line-height, and the only text allowed to wrap onto a second line.", "section": "typography" },
+      { "name": "The Two Voices Rule", "body": "Exactly two faces ship: the bundled condensed signage face for the sheet and the platform's own UI face for VS Code chrome (the context menu). No third voice — no system display face, no monospace, no icon font.", "section": "typography" },
+      { "name": "The Read-Down Rule", "body": "Time runs down and branch depth runs right — the footer says it: read down = time. Time is never laid horizontally and the sheet is never rotated.", "section": "layout" },
+      { "name": "The Forty-Five Rule", "body": "Every route change of direction is a true 45° elbow: vertical, then a diagonal exactly as long as the lane offset, then vertical again. No curves, no beziers, no arcs anywhere in the routing.", "section": "layout" },
+      { "name": "The Sheet Width Rule", "body": "The drawing sets the sheet's width and the header and footer cap to it. Chrome never outruns the drawing, and the drawing never compresses below 300px.", "section": "layout" },
+      { "name": "The Flat Sheet Rule", "body": "The sheet is flat at rest and in every state. Layering is done with 1px rules, one tinted band and draw order; the moment a sheet element needs a shadow to be legible, the hierarchy has failed, not the shadow budget.", "section": "elevation" },
+      { "name": "The Two-Pixel Rule", "body": "2px is the entire radius budget for rectangles in this system — the flooded row and its focus ring. Everything else that is rectangular is square; anything that is round is a control.", "section": "shapes" },
+      { "name": "The Punched Control Rule", "body": "A control ring is filled with the ground, not left transparent: the course thread runs behind the control, so each ring reads as a hole punched in the route. Circles are reserved for on-course checkpoints, and only on-course checkpoints carry numbers.", "section": "shapes" },
+      { "name": "The Dash Means Ghost Rule", "body": "Dashes carry one meaning wherever they appear: nothing has been ridden here — an abandoned leg (9/7 dash), or a sheet with no records yet (the card's dashed border). Never decorative.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do keep the layer order: trunk and branches, then ghost legs, then the course thread, then stations.",
+      "Do draw the course thread whole — one polyline through every control from origin to the active checkpoint on every render. Never animate it segment by segment.",
+      "Do keep the flood at 14% and the hover wash at 7% in the day rendition, so an aimed row never reads as the current row.",
+      "Do keep provenance in the micro-tag: olive for \"AI prompt\", amber for \"AI applied\", faded ink for origin and manual. A type never colours a line, a ring or a row.",
+      "Do keep every string uppercase, in the bundled condensed face, between 8.5px and 12px.",
+      "Do let the theme choose the rendition and the header name it; retune ground, ink, dim and rule and all four accents together, never one alone.",
+      "Do keep the 2px radii to the flooded band and its focus ring, keep off-course records as a 22px tick, and keep every route turn at 45°.",
+      "Do keep the hit row at least 56px tall and 160px wide, with a visible focus ring on :focus-visible."
+    ],
+    "donts": [
+      "Don't use blue for anything but branch lines and their legend key — not for selection, not for links, not for the active checkpoint.",
+      "Don't use olive or amber outside the provenance micro-tag.",
+      "Don't number off-course records: numbered rings belong to the course (origin down to the active checkpoint), everything else is a tick.",
+      "Don't add radii beyond 2px, shadows on the sheet, gradients or translucency.",
+      "Don't set type above 12px on the sheet, or add a second face — no system display face, no monospace, no icon font.",
+      "Don't restyle platform chrome: the context menu keeps the platform UI face and its native menu tokens.",
+      "Don't route a line with curves, arcs or any diagonal other than 45°.",
+      "Don't introduce a fourth accent to mean \"selected\": selection is flood + ring weight + the deep-violet tag, not a new hue.",
+      "Don't lay time horizontally or rotate the sheet."
+    ]
+  }
+}

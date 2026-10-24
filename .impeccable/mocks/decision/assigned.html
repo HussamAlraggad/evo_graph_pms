@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>The Interchange Sheet — sketch</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;width:840px;height:900px;overflow:hidden;background:#0a0b0d;
+    font-family:"Arial Narrow","Helvetica Neue",system-ui,sans-serif}
+  .wrap{display:flex;gap:12px;padding:12px}
+  .panel{position:relative;width:402px;height:876px;overflow:hidden}
+  .night{--bg:#121417;--ink:#e8ebef;--dim:#98a1ab;--rule:#2a2f36;--purple:#9b6bd3;--blue:#6fb6e3;background:var(--bg);color:var(--ink)}
+  .day{--bg:#f5f4f0;--ink:#111111;--dim:#6f6d68;--rule:#d9d7d0;--purple:#7b2cbf;--blue:#5fa7d6;background:var(--bg);color:var(--ink)}
+  header{position:absolute;left:16px;right:16px;top:14px;padding-bottom:9px;border-bottom:1px solid var(--rule);
+    display:flex;justify-content:space-between;align-items:baseline}
+  header h1{margin:0;font-size:12.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+  header .r{font-size:8.5px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+  .main{position:absolute;left:96px;top:92px;width:7px;height:560px;background:var(--ink)}
+  .link{position:absolute;left:96px;top:386px;width:90px;height:7px;background:var(--blue);transform:rotate(45deg);transform-origin:left center}
+  .branch{position:absolute;left:157px;top:450px;width:7px;height:130px;background:var(--blue)}
+  .tick{position:absolute;left:146px;width:22px;height:2px;background:var(--ink)}
+  .course{position:absolute;left:97.5px;top:106px;width:4px;height:456px;background:var(--purple)}
+  .ghost{position:absolute;left:158.5px;top:440px;width:3px;height:64px;opacity:.6;
+    background:repeating-linear-gradient(180deg,var(--purple) 0 8px,transparent 8px 15px)}
+  .ring{position:absolute;left:89px;width:22px;height:22px;border-radius:50%;background:var(--bg);border:2.5px solid var(--purple)}
+  .ring.big{left:87px;width:26px;height:26px;border-width:3px}
+  .num{position:absolute;left:66px;font-size:11px;font-weight:700;color:var(--purple)}
+  .st{position:absolute;left:132px}
+  .st h2{margin:0 0 2px;font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+  .st p{margin:0;font-size:8px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+  .st p.hot{color:var(--purple)}
+  .legend{position:absolute;left:16px;right:16px;bottom:54px;display:flex;gap:12px;font-size:8px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase}
+  .key{display:inline-block;width:20px;height:3px;vertical-align:2px;margin-right:4px}
+  footer{position:absolute;left:16px;right:16px;bottom:16px;border-top:1px solid var(--rule);padding-top:8px;
+    display:flex;justify-content:space-between;font-size:8px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <section class="panel night">
+    <header><h1>Checkpoint Sheet</h1><span class="r">Night Race &middot; 6 stations</span></header>
+    <div class="main"></div><div class="link"></div><div class="branch"></div><div class="course"></div><div class="ghost"></div>
+    <div class="ring" style="top:128px"></div><div class="num" style="top:132px">1</div>
+    <div class="st" style="top:128px"><h2>Origin</h2><p>origin &middot; 09:12</p></div>
+    <div class="ring" style="top:226px"></div><div class="num" style="top:230px">2</div>
+    <div class="st" style="top:226px"><h2>Changed README.md</h2><p>manual &middot; 09:48</p></div>
+    <div class="ring big" style="top:320px"></div><div class="num" style="top:326px">3</div>
+    <div class="st" style="top:322px"><h2>Changed 4 files</h2><p>manual &middot; 10:31 &middot; branch point</p></div>
+    <div class="tick" style="top:462px"></div>
+    <div class="st" style="top:452px;left:176px"><h2>Changed auth-flow.ts</h2><p>manual &middot; 10:58</p><p class="hot">ghost leg</p></div>
+    <div class="ring" style="top:522px"></div><div class="num" style="top:526px">4</div>
+    <div class="st" style="top:522px"><h2>Changed login.ts</h2><p class="hot">manual &middot; 11:02 &middot; active</p></div>
+    <div class="legend">
+      <span><i class="key" style="background:var(--purple)"></i>course &mdash; your ride</span>
+      <span><i class="key" style="background:repeating-linear-gradient(90deg,var(--purple) 0 4px,transparent 4px 8px)"></i>ghost &mdash; abandoned</span>
+      <span><i class="key" style="background:var(--blue)"></i>branch</span>
+    </div>
+    <footer><span>Read down = time</span><span>Course = the path you rode</span></footer>
+  </section>
+
+  <section class="panel day">
+    <header><h1>Checkpoint Sheet</h1><span class="r">Day Map &middot; 6 stations</span></header>
+    <div class="main"></div><div class="link"></div><div class="branch"></div><div class="course"></div><div class="ghost"></div>
+    <div class="ring" style="top:128px"></div><div class="num" style="top:132px">1</div>
+    <div class="st" style="top:128px"><h2>Origin</h2><p>origin &middot; 09:12</p></div>
+    <div class="ring" style="top:226px"></div><div class="num" style="top:230px">2</div>
+    <div class="st" style="top:226px"><h2>Changed README.md</h2><p>manual &middot; 09:48</p></div>
+    <div class="ring big" style="top:320px"></div><div class="num" style="top:326px">3</div>
+    <div class="st" style="top:322px"><h2>Changed 4 files</h2><p>manual &middot; 10:31 &middot; branch point</p></div>
+    <div class="tick" style="top:462px"></div>
+    <div class="st" style="top:452px;left:176px"><h2>Changed auth-flow.ts</h2><p>manual &middot; 10:58</p><p class="hot">ghost leg</p></div>
+    <div class="ring" style="top:522px"></div><div class="num" style="top:526px">4</div>
+    <div class="st" style="top:522px"><h2>Changed login.ts</h2><p class="hot">manual &middot; 11:02 &middot; active</p></div>
+    <div class="legend">
+      <span><i class="key" style="background:var(--purple)"></i>course &mdash; your ride</span>
+      <span><i class="key" style="background:repeating-linear-gradient(90deg,var(--purple) 0 4px,transparent 4px 8px)"></i>ghost &mdash; abandoned</span>
+      <span><i class="key" style="background:var(--blue)"></i>branch</span>
+    </div>
+    <footer><span>Read down = time</span><span>Course = the path you rode</span></footer>
+  </section>
+
+</div>
+</body>
+</html>

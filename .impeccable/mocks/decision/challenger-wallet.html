@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Jet-Age Ticket Wallet — sketch</title>
+<style>
+  :root{--stock:#f2f2f0;--navy:#001b3d;--red:#d7262d;--carbon:#4b2e83;--dim:#6d6a63;--line:#d8d5cc}
+  *{box-sizing:border-box}
+  body{margin:0;width:420px;height:900px;overflow:hidden;background:var(--stock);color:var(--navy);
+    font-family:"Arial Narrow","Helvetica Neue",system-ui,sans-serif}
+  .panel{position:relative;width:420px;height:900px}
+  .band{background:var(--navy);color:#fff;padding:16px 18px 13px;display:flex;justify-content:space-between;align-items:baseline}
+  .band h1{margin:0;font-size:14px;font-weight:700;letter-spacing:.2em;text-transform:uppercase}
+  .band span{font-size:9px;letter-spacing:.2em;color:#9db0c8}
+  .redrule{height:5px;background:var(--red)}
+  .arc{margin:14px 18px 4px;background:#e9e6df;border:1px solid var(--line);padding:10px 12px 8px}
+  .arc .cap{font-size:8px;letter-spacing:.22em;color:var(--dim);text-transform:uppercase;margin:0 0 4px}
+  .arc svg{display:block;width:100%;height:74px}
+  .coupon{position:relative;margin:12px 18px;background:#fff;border:1px solid var(--line)}
+  .coupon .tabs{display:flex;justify-content:space-between}
+  .coupon .tab{font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;padding:5px 10px}
+  .coupon .tab.l{background:var(--navy);color:#fff}
+  .coupon .tab.r{color:var(--dim);border-left:1px solid var(--line)}
+  .coupon h2{margin:10px 12px 8px;font-size:15px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+  .fields{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line)}
+  .f{padding:6px 12px 7px;border-bottom:1px solid var(--line)}
+  .f:nth-child(odd){border-right:1px solid var(--line)}
+  .f .k{font-size:7.5px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin:0 0 2px}
+  .f .v{margin:0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;color:var(--carbon);letter-spacing:.04em}
+  .coupon.active{border-left:5px solid var(--red)}
+  .coupon.active .tab.l{background:var(--red)}
+  .void .stamp{position:absolute;right:14px;top:34px;border:2.5px solid var(--red);color:var(--red);
+    font-size:16px;font-weight:700;letter-spacing:.3em;padding:4px 10px 4px 14px;transform:rotate(-12deg);background:rgba(242,242,240,.75)}
+  .void h2{color:#a9a69e;text-decoration:line-through}
+  .void .fields{opacity:.55}
+  footer{position:absolute;left:18px;right:18px;bottom:20px;border-top:2px solid var(--navy);padding-top:9px;
+    display:flex;justify-content:space-between;font-size:8.5px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="panel">
+  <div class="band"><h1>Checkpoint Wallet</h1><span>SHEET 07</span></div>
+  <div class="redrule"></div>
+
+  <div class="arc">
+    <p class="cap">Route arc &middot; the journey so far</p>
+    <svg viewBox="0 0 340 74" aria-hidden="true">
+      <path d="M20 60 C 90 22, 200 14, 322 40" fill="none" stroke="#001b3d" stroke-width="1.6"/>
+      <circle cx="20" cy="60" r="3.5" fill="#001b3d"/>
+      <circle cx="96" cy="36" r="3.5" fill="#001b3d"/>
+      <circle cx="172" cy="23" r="3.5" fill="#001b3d"/>
+      <circle cx="248" cy="22" r="3.5" fill="#001b3d"/>
+      <circle cx="322" cy="40" r="4.5" fill="#d7262d"/>
+      <line x1="248" y1="22" x2="238" y2="52" stroke="#4b2e83" stroke-width="1.4" stroke-dasharray="4 4"/>
+      <circle cx="236" cy="56" r="3" fill="none" stroke="#4b2e83" stroke-width="1.4"/>
+    </svg>
+  </div>
+
+  <div class="coupon">
+    <div class="tabs"><span class="tab l">Manual</span><span class="tab r">Leg 1</span></div>
+    <h2>Changed README.md</h2>
+    <div class="fields">
+      <div class="f"><p class="k">Type</p><p class="v">manual</p></div>
+      <div class="f"><p class="k">Time</p><p class="v">09:48</p></div>
+      <div class="f"><p class="k">Files</p><p class="v">1 changed</p></div>
+      <div class="f"><p class="k">Id</p><p class="v">3f8e-11a9</p></div>
+    </div>
+  </div>
+
+  <div class="coupon">
+    <div class="tabs"><span class="tab l">Manual</span><span class="tab r">Leg 2</span></div>
+    <h2>Changed 4 files</h2>
+    <div class="fields">
+      <div class="f"><p class="k">Type</p><p class="v">manual</p></div>
+      <div class="f"><p class="k">Time</p><p class="v">10:31</p></div>
+      <div class="f"><p class="k">Files</p><p class="v">4 changed</p></div>
+      <div class="f"><p class="k">Id</p><p class="v">77c1-5d0e</p></div>
+    </div>
+  </div>
+
+  <div class="coupon active">
+    <div class="tabs"><span class="tab l">Manual</span><span class="tab r">Leg 3 &middot; Active</span></div>
+    <h2>Changed login.ts</h2>
+    <div class="fields">
+      <div class="f"><p class="k">Type</p><p class="v">manual</p></div>
+      <div class="f"><p class="k">Time</p><p class="v">11:02</p></div>
+      <div class="f"><p class="k">Files</p><p class="v">1 changed</p></div>
+      <div class="f"><p class="k">Id</p><p class="v">b2f7-40cc</p></div>
+    </div>
+  </div>
+
+  <div class="coupon void">
+    <div class="stamp">VOID</div>
+    <div class="tabs"><span class="tab l">Manual</span><span class="tab r">Leg 4</span></div>
+    <h2>Changed auth-flow.ts</h2>
+    <div class="fields">
+      <div class="f"><p class="k">Type</p><p class="v">manual</p></div>
+      <div class="f"><p class="k">Time</p><p class="v">10:58</p></div>
+      <div class="f"><p class="k">State</p><p class="v">deleted</p></div>
+      <div class="f"><p class="k">Id</p><p class="v">91b4-8a02</p></div>
+    </div>
+  </div>
+
+  <footer><span>Nothing disappears &middot; it cancels</span><span>4 legs</span></footer>
+</div>
+</body>
+</html>
