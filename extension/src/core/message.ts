@@ -60,7 +60,7 @@ function validateMeta(value: unknown, oid?: string): CheckpointMeta {
   const taskId = record.taskId;
 
   if (typeof schemaVersion !== "number") throw invalidMeta("schemaVersion is missing or not a number", oid);
-  if (schemaVersion !== SCHEMA_VERSION) {
+  if (schemaVersion !== 1 && schemaVersion !== SCHEMA_VERSION) {
     throw invalidMeta(`unsupported schemaVersion ${String(schemaVersion)}`, oid);
   }
   if (typeof id !== "string" || id.length === 0) throw invalidMeta("id is missing", oid);
@@ -76,6 +76,14 @@ function validateMeta(value: unknown, oid?: string): CheckpointMeta {
   if (taskId !== undefined && typeof taskId !== "string") {
     throw invalidMeta("taskId must be a string when present", oid);
   }
+  const provider = record.provider;
+  const model = record.model;
+  if (provider !== undefined && typeof provider !== "string") {
+    throw invalidMeta("provider must be a string when present", oid);
+  }
+  if (model !== undefined && typeof model !== "string") {
+    throw invalidMeta("model must be a string when present", oid);
+  }
 
   const meta: CheckpointMeta = {
     schemaVersion,
@@ -87,6 +95,8 @@ function validateMeta(value: unknown, oid?: string): CheckpointMeta {
     parentId,
   };
   if (typeof taskId === "string") meta.taskId = taskId;
+  if (typeof provider === "string") meta.provider = provider;
+  if (typeof model === "string") meta.model = model;
   return meta;
 }
 

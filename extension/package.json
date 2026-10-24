@@ -37,8 +37,30 @@
         "command": "evograph.openGraph",
         "title": "Open Checkpoint File",
         "category": "EvoGraph"
+      },
+      {
+        "command": "evograph.setAssistantApiKey",
+        "title": "Set Assistant API Key…",
+        "category": "EvoGraph"
       }
     ],
+    "configuration": {
+      "title": "EvoGraph",
+      "properties": {
+        "evograph.assistant.baseUrl": {
+          "type": "string",
+          "default": "https://api.openai.com/v1",
+          "order": 1,
+          "markdownDescription": "Base URL of an OpenAI-compatible chat completions endpoint (OpenAI, OpenRouter, a local Ollama or LM Studio server). The assistant calls `<baseUrl>/chat/completions`."
+        },
+        "evograph.assistant.model": {
+          "type": "string",
+          "default": "gpt-4o-mini",
+          "order": 2,
+          "markdownDescription": "Model id sent with every request. Pin an exact version for study runs (for example `gpt-4o-2024-08-06`); each AI checkpoint records the provider, model and version that produced it."
+        }
+      }
+    },
     "viewsContainers": {
       "secondarySidebar": [
         {
@@ -50,6 +72,11 @@
     },
     "views": {
       "evograph": [
+        {
+          "id": "evograph.assistant",
+          "name": "Assistant",
+          "type": "webview"
+        },
         {
           "id": "evograph.history",
           "name": "Checkpoint File",

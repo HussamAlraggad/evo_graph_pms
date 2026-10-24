@@ -1,8 +1,9 @@
 import * as vscode from "vscode";
+import { promptForApiKey } from "./ai/config";
 import type { CheckpointEngine } from "./core/engine";
 import { showError } from "./ui/errors";
 import { checkpointTypeLabel, formatRelativeTime } from "./ui/format";
-import { STATUS_MENU_COMMAND, type StatusBarController } from "./ui/statusBar";
+import { STATUS_MENU_COMMAND } from "./ui/statusBar";
 
 const NO_WORKSPACE_MESSAGE = "EvoGraph requires an open folder workspace.";
 
@@ -13,18 +14,17 @@ interface StatusMenuPick extends vscode.QuickPickItem {
 export function registerCommands(
   context: vscode.ExtensionContext,
   engine: CheckpointEngine | undefined,
-  statusBar: StatusBarController,
-  refreshGraph: () => Promise<void>,
+  refresh: () => Promise<void>,
 ): void {
   context.subscriptions.push(
-    vscode.commands.registerCommand("evograph.createCheckpoint", () =>
-      createCheckpoint(engine, statusBar, refreshGraph),
-    ),
-    vscode.commands.registerCommand("evograph.switchCheckpoint", () =>
-      switchCheckpoint(engine, statusBar, refreshGraph),
-    ),
+    vscode.commands.registerCommand("evograph.createCheckpoint", () => createCheckpoint(engine, refresh)),
+    vscode.commands.registerCommand("evograph.switchCheckpoint", () => switchCheckpoint(engine, refresh)),
     vscode.commands.registerCommand("evograph.openGraph", () => openGraph()),
     vscode.commands.registerCommand(STATUS_MENU_COMMAND, () => showStatusMenu(engine)),
+    vscode.commands.registerCommand("evograph.setAssistantApiKey", async () => {
+      await promptForApiKey(context);
+      await refresh();
+    }),
   );
 }
 
@@ -38,8 +38,7 @@ async function openGraph(): Promise<void> {
 
 async function createCheckpoint(
   engine: CheckpointEngine | undefined,
-  statusBar: StatusBarController,
-  refreshGraph: () => Promise<void>,
+  refresh: () => Promise<void>,
 ): Promise<void> {
   if (!engine) {
     void vscode.window.showErrorMessage(NO_WORKSPACE_MESSAGE);
@@ -50,7 +49,7 @@ async function createCheckpoint(
       { location: vscode.ProgressLocation.Window, title: "EvoGraph: creating checkpoint" },
       () => engine.createCheckpoint(),
     );
-    await Promise.all([statusBar.refresh(), refreshGraph()]);
+    await refresh();
     void vscode.window.showInformationMessage(`EvoGraph: checkpoint created — ${checkpoint.title}`);
   } catch (error) {
     showError("create a checkpoint", error);
@@ -59,8 +58,7 @@ async function createCheckpoint(
 
 async function switchCheckpoint(
   engine: CheckpointEngine | undefined,
-  statusBar: StatusBarController,
-  refreshGraph: () => Promise<void>,
+  refresh: () => Promise<void>,
 ): Promise<void> {
   if (!engine) {
     void vscode.window.showErrorMessage(NO_WORKSPACE_MESSAGE);
@@ -91,7 +89,7 @@ async function switchCheckpoint(
       { location: vscode.ProgressLocation.Window, title: "EvoGraph: switching checkpoint" },
       () => engine.switchToCheckpoint(picked.checkpoint.id),
     );
-    await Promise.all([statusBar.refresh(), refreshGraph()]);
+    await refresh();
     if (result.safety) {
       vscode.window.setStatusBarMessage("EvoGraph: saved a safety checkpoint before switching", 4000);
     }
@@ -117,6 +115,10 @@ async function showStatusMenu(engine: CheckpointEngine | undefined): Promise<voi
     {
       label: "$(map) Open checkpoint file",
       run: () => void vscode.commands.executeCommand("evograph.openGraph"),
+    },
+    {
+      label: "$(key) Set assistant API key…",
+      run: () => void vscode.commands.executeCommand("evograph.setAssistantApiKey"),
     },
   ];
   const picked = await vscode.window.showQuickPick(picks, { title: "EvoGraph" });

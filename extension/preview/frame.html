@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Panel capture frame</title>
+<style>
+  /* Capture harness: renders a preview document in an exactly-sized iframe at
+     the top-left corner, so a viewport screenshot cropped to w x h is the
+     panel's own pixels at the requested panel width and height. */
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background: #202020;
+    overflow: hidden;
+  }
+  iframe {
+    display: block;
+    border: 0;
+  }
+</style>
+</head>
+<body>
+<script>
+  (function () {
+    "use strict";
+    var params = new URLSearchParams(window.location.search);
+    var src = params.get("src");
+    var width = Number(params.get("w") || 420);
+    var height = Number(params.get("h") || 900);
+    var frame = document.createElement("iframe");
+    frame.src = src;
+    frame.width = String(width);
+    frame.height = String(height);
+    frame.style.width = width + "px";
+    frame.style.height = height + "px";
+    document.body.appendChild(frame);
+  })();
+</script>
+</body>
+</html>

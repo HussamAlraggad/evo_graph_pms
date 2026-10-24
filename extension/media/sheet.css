@@ -1,0 +1,174 @@
+/*
+ * The sheet base: the vocabulary every sheet in this panel family shares —
+ * the bundled signage face, the four renditions' tokens, the header strip,
+ * the state card and the single motion event. Panel-specific stylesheets
+ * (view.css, assistant.css) build on this file and nothing else.
+ */
+
+@font-face {
+  font-family: "Roboto Condensed Signage";
+  src: url("fonts/roboto-condensed-latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+body.vscode-light {
+  --ground: #f5f4f0;
+  --ink: #111111;
+  --dim: #6f6d68;
+  --rule: #d9d7d0;
+  --purple: #7b2cbf;
+  --purple-ink: #5b1d99;
+  --blue: #5fa7d6;
+  --olive: #5f6c2d;
+  --amber: #8a5f00;
+  --flood: rgba(123, 44, 191, 0.14);
+  --hover: rgba(123, 44, 191, 0.07);
+}
+body.vscode-dark {
+  --ground: #121417;
+  --ink: #e8ebef;
+  --dim: #98a1ab;
+  --rule: #2a2f36;
+  --purple: #9b6bd3;
+  --purple-ink: #d9c2f5;
+  --blue: #6fb6e3;
+  --olive: #b9c77e;
+  --amber: #e0b34c;
+  --flood: rgba(155, 107, 211, 0.2);
+  --hover: rgba(155, 107, 211, 0.1);
+}
+body.vscode-high-contrast {
+  --ground: #000000;
+  --ink: #ffffff;
+  --dim: #d6d6d6;
+  --rule: #6f6f6f;
+  --purple: #c9a1f5;
+  --purple-ink: #e6d6ff;
+  --blue: #93d2ff;
+  --olive: #d3e08f;
+  --amber: #ffd98a;
+  --flood: rgba(201, 161, 245, 0.26);
+  --hover: rgba(201, 161, 245, 0.16);
+}
+body.vscode-high-contrast-light {
+  --ground: #ffffff;
+  --ink: #000000;
+  --dim: #333333;
+  --rule: #767676;
+  --purple: #5b1d99;
+  --purple-ink: #3d1069;
+  --blue: #0b5f96;
+  --olive: #4f5c26;
+  --amber: #7a5400;
+  --flood: rgba(91, 29, 153, 0.16);
+  --hover: rgba(91, 29, 153, 0.08);
+}
+
+.sheet {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: "Roboto Condensed Signage", "Arial Narrow", "Helvetica Neue", system-ui, sans-serif;
+}
+
+.sheet-header {
+  max-width: var(--sheet-width, none);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  padding: 12px 14px 9px;
+  border-bottom: 1px solid var(--rule);
+}
+.sheet-header h1 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.sheet-header .count {
+  font-size: 8.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dim);
+  white-space: nowrap;
+}
+
+.state {
+  padding: 26px 16px;
+  display: flex;
+}
+.state-card {
+  border: 1px dashed var(--rule);
+  padding: 16px 16px 14px;
+  width: 100%;
+}
+.state-title {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.state-body {
+  margin: 0 0 12px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--dim);
+}
+.state-action {
+  font: inherit;
+  font-size: 11.5px;
+  padding: 5px 12px;
+  color: var(--vscode-button-foreground, #ffffff);
+  background: var(--vscode-button-background, #7b2cbf);
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+}
+.state-action:hover {
+  background: var(--vscode-button-hoverBackground, #6b23a8);
+}
+.state-action:focus-visible {
+  outline: 2px solid var(--vscode-focusBorder, #3794ff);
+  outline-offset: 1px;
+}
+.state-action:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.state-action:disabled:hover {
+  background: var(--vscode-button-background, #7b2cbf);
+}
+
+@keyframes evograph-invert {
+  0% {
+    filter: none;
+  }
+  35% {
+    filter: invert(1);
+  }
+  100% {
+    filter: none;
+  }
+}
+body.inverting {
+  animation: evograph-invert 170ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  body.inverting {
+    animation: none;
+  }
+}

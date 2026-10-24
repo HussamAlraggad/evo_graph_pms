@@ -1,0 +1,198 @@
+/*
+ * The assistant panel's sheet: a correspondence log in the interchange
+ * vocabulary. Chrome (header, tags, labels, hints) speaks the signage face in
+ * caps at 8.5-12px; message content is the prose tier (sentence case, 11.5px);
+ * code content sets in the editor's monospace face at 11px and nothing else
+ * does. One new container ships — the code block — and one button: the sheet's
+ * own state action, reused for Send, Apply and Retry.
+ *
+ * The column is a printed sheet with a fixed printed width: `--sheet-width`
+ * caps the header, the transcript and the composer at 360px, which falls out
+ * as a 74-character measure at 11.5px condensed — the reading width for a
+ * correspondence log. Where the panel is wider the ground simply continues to
+ * the right, exactly as it does under the map.
+ */
+
+.sheet {
+  --sheet-width: 360px;
+}
+
+/* One box model for the capped strips: the header, the transcript and the
+   composer all end on the same right edge, and the cap holds the padding. */
+.sheet-header,
+.transcript,
+.composer {
+  max-width: var(--sheet-width);
+  box-sizing: border-box;
+}
+
+.sheet-header .count.ident {
+  text-transform: none;
+  letter-spacing: 0.06em;
+}
+
+.transcript {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.carried {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--rule);
+  font-size: 8.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.carried .carried-tag {
+  flex: none;
+}
+.carried .carried-title {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.carried .typecode.prompt {
+  color: var(--olive);
+}
+.carried .typecode.applied {
+  color: var(--amber);
+}
+
+.msg {
+  padding: 10px 14px 12px;
+  border-bottom: 1px solid var(--rule);
+}
+.msg-tag {
+  margin: 0 0 5px;
+  font-size: 8.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.msg-body {
+  margin: 0;
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+.msg-prose {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.msg-prose + .code,
+.code + .msg-prose {
+  margin-top: 8px;
+}
+.msg.pending .msg-body,
+.msg.pending .msg-prose {
+  color: var(--dim);
+}
+
+.code {
+  border: 1px solid var(--rule);
+}
+.code-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 6px 5px 10px;
+  border-bottom: 1px solid var(--rule);
+}
+.code-label {
+  flex: none;
+  font-size: 8.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.code-file {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-family: var(--vscode-editor-font-family, ui-monospace, "SF Mono", Menlo, Consolas, monospace);
+  font-size: 11px;
+}
+.code .apply {
+  flex: none;
+  margin-left: auto;
+}
+.code-body {
+  margin: 0;
+  padding: 8px 10px;
+  font-family: var(--vscode-editor-font-family, ui-monospace, "SF Mono", Menlo, Consolas, monospace);
+  font-size: 11px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.awaiting {
+  margin: 10px 14px 12px;
+  border: 1px dashed var(--rule);
+  padding: 10px 12px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--dim);
+}
+.msg .retry {
+  margin-top: 8px;
+}
+
+.composer {
+  border-top: 1px solid var(--rule);
+  padding: 10px 14px 9px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.composer-input {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 6px 8px;
+  min-height: 49px;
+  max-height: 132px;
+  overflow-y: auto;
+  resize: none;
+  font-family: inherit;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--ground);
+  border: 1px solid var(--rule);
+  border-radius: 0;
+}
+.composer-input::placeholder {
+  color: var(--dim);
+  opacity: 1;
+}
+.composer-input:focus-visible {
+  outline: 2px solid var(--vscode-focusBorder, #3794ff);
+  outline-offset: 1px;
+}
+.composer-input:disabled {
+  opacity: 0.55;
+}
+.composer-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.composer-hint {
+  font-size: 8.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dim);
+}

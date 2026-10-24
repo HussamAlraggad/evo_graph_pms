@@ -9,7 +9,7 @@ import type { CheckpointMeta } from "../src/core/types";
 
 function sampleMeta(overrides: Partial<CheckpointMeta> = {}): CheckpointMeta {
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     id: "0f6c2f78-3f0a-4a58-9c2a-3f3d6f9a1b2c",
     type: "manual",
     title: "Changed app.ts",
@@ -35,6 +35,26 @@ describe("checkpoint message codec", () => {
     const decoded = decodeCheckpointMessage(encodeCheckpointMessage(meta));
     expect(decoded.parentId).toBe("8a1b0c2d-1111-4222-8333-444455556666");
     expect(decoded.taskId).toBe("102");
+  });
+
+  it("round-trips provider and model on AI checkpoints", () => {
+    const meta = sampleMeta({
+      type: "ai_prompt",
+      provider: "openai-compatible",
+      model: "gpt-4o-2024-08-06",
+    });
+    const decoded = decodeCheckpointMessage(encodeCheckpointMessage(meta));
+    expect(decoded.type).toBe("ai_prompt");
+    expect(decoded.provider).toBe("openai-compatible");
+    expect(decoded.model).toBe("gpt-4o-2024-08-06");
+  });
+
+  it("accepts schemaVersion 1 metadata from pre-M2 stores", () => {
+    const v1 = { ...sampleMeta(), schemaVersion: 1 };
+    const message = `title\n\n${META_MARKER}\n${JSON.stringify(v1)}`;
+    const decoded = decodeCheckpointMessage(message);
+    expect(decoded.schemaVersion).toBe(1);
+    expect(decoded.provider).toBeUndefined();
   });
 
   it("rejects messages without the metadata marker, naming the commit", () => {

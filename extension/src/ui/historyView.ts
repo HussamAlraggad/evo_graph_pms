@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import type { CheckpointEngine } from "../core/engine";
 import { showError } from "./errors";
+import { createNonce } from "./nonce";
 
 interface WebviewMessage {
   type: string;
@@ -125,6 +126,7 @@ export class HistoryViewProvider implements vscode.WebviewViewProvider {
 
   private buildHtml(webview: vscode.Webview): string {
     const nonce = createNonce();
+    const sheetStyleUri = webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, "media", "sheet.css"));
     const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, "media", "view.css"));
     const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, "media", "graph.js"));
     const csp = [
@@ -140,6 +142,7 @@ export class HistoryViewProvider implements vscode.WebviewViewProvider {
 <meta charset="UTF-8">
 <meta http-equiv="Content-Security-Policy" content="${csp}">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="${sheetStyleUri}">
 <link rel="stylesheet" href="${styleUri}">
 <title>Checkpoint File</title>
 </head>
@@ -149,13 +152,4 @@ export class HistoryViewProvider implements vscode.WebviewViewProvider {
 </body>
 </html>`;
   }
-}
-
-function createNonce(): string {
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let nonce = "";
-  for (let index = 0; index < 32; index += 1) {
-    nonce += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-  return nonce;
 }

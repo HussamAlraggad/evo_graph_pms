@@ -1,0 +1,265 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Assistant preview</title>
+<link rel="stylesheet" href="../media/sheet.css">
+<link rel="stylesheet" href="../media/assistant.css">
+<style>
+  /* Preview-only: deterministically paint the production :focus-visible outline
+     (identical declarations to sheet.css `.state-action:focus-visible`) on the
+     Apply button the harness marks, so the keyboard-focus state captures headlessly. */
+  .apply.preview-focus-ring {
+    outline: 2px solid var(--vscode-focusBorder, #3794ff);
+    outline-offset: 1px;
+  }
+  /* Preview-only: emulate the VS Code themed webview scrollbar. The real webview
+     receives --vscode-scrollbarSlider-* and the Chromium engine styles its own
+     scrollbars with them; Firefox needs the standard properties spelled out. */
+  body.vscode-dark {
+    --vscode-scrollbarSlider-background: rgba(121, 121, 121, 0.4);
+  }
+  body.vscode-light {
+    --vscode-scrollbarSlider-background: rgba(100, 100, 100, 0.4);
+  }
+  body.vscode-high-contrast {
+    --vscode-scrollbarSlider-background: rgba(255, 255, 255, 0.4);
+  }
+  body.vscode-high-contrast-light {
+    --vscode-scrollbarSlider-background: rgba(0, 0, 0, 0.4);
+  }
+  .transcript {
+    scrollbar-width: thin;
+    scrollbar-color: var(--vscode-scrollbarSlider-background) transparent;
+  }
+  /* Preview-only: emulate the VS Code theme tokens the real webview receives. */
+  body.vscode-dark {
+    --vscode-button-background: #0e639c;
+    --vscode-button-foreground: #ffffff;
+    --vscode-button-hoverBackground: #1177bb;
+    --vscode-font-family: "Segoe UI", system-ui, sans-serif;
+    --vscode-focusBorder: #007fd4;
+    --vscode-editor-font-family: "DejaVu Sans Mono", monospace;
+  }
+  body.vscode-light {
+    --vscode-button-background: #0078d4;
+    --vscode-button-foreground: #ffffff;
+    --vscode-button-hoverBackground: #026ec1;
+    --vscode-font-family: "Segoe UI", system-ui, sans-serif;
+    --vscode-focusBorder: #0090f1;
+    --vscode-editor-font-family: "DejaVu Sans Mono", monospace;
+  }
+  body.vscode-high-contrast {
+    --vscode-button-background: #ffffff;
+    --vscode-button-foreground: #000000;
+    --vscode-button-hoverBackground: #e6e6e6;
+    --vscode-font-family: "Segoe UI", system-ui, sans-serif;
+    --vscode-focusBorder: #f38518;
+    --vscode-editor-font-family: "DejaVu Sans Mono", monospace;
+  }
+  body.vscode-high-contrast-light {
+    --vscode-button-background: #0f0f0f;
+    --vscode-button-foreground: #ffffff;
+    --vscode-button-hoverBackground: #313131;
+    --vscode-font-family: "Segoe UI", system-ui, sans-serif;
+    --vscode-focusBorder: #0f4a85;
+    --vscode-editor-font-family: "DejaVu Sans Mono", monospace;
+  }
+</style>
+</head>
+<body>
+<div id="root" class="sheet"></div>
+<script>
+  (function () {
+    "use strict";
+    var params = new URLSearchParams(window.location.search);
+    var theme = params.get("theme") || "dark";
+    document.body.className =
+      theme === "light"
+        ? "vscode-light"
+        : theme === "hc"
+          ? "vscode-high-contrast"
+          : theme === "hcl"
+            ? "vscode-high-contrast-light"
+            : "vscode-dark";
+
+    window.acquireVsCodeApi = function () {
+      return {
+        postMessage: function (message) {
+          window.__lastPosted = message;
+        },
+      };
+    };
+
+    var PREFIX = "evograph-checkpoint-";
+    function id(n) {
+      return PREFIX + String(n).padStart(2, "0");
+    }
+
+    function prose(text) {
+      return { kind: "prose", text: text };
+    }
+
+    window.__previewState = {
+      kind: "ready",
+      provider: "openai-compatible",
+      model: "gpt-4o-2024-08-06",
+      activeId: id(8),
+      nodeId: id(7),
+      carriedFrom: null,
+      messages: [
+        {
+          role: "user",
+          createdAt: "2026-10-24T11:26:00.000Z",
+          parts: [
+            prose(
+              "The token refresher runs twice when two requests overlap. Find the race and fix it in the session store.",
+            ),
+          ],
+        },
+        {
+          role: "assistant",
+          createdAt: "2026-10-24T11:26:20.000Z",
+          parts: [
+            prose(
+              "Two callers share one mutable flag, so both see idle and both start a refresh. The fix is to hold the in-flight promise instead of a boolean, so the second caller awaits the first refresh rather than starting its own.",
+            ),
+            {
+              kind: "code",
+              language: "ts",
+              file: "src/auth/session-store.ts",
+              blockId: "1-1",
+              code:
+                "let refreshInFlight: Promise<Tokens> | null = null;\n" +
+                "\n" +
+                "export async function refreshTokens(): Promise<Tokens> {\n" +
+                "  if (refreshInFlight) return refreshInFlight;\n" +
+                "  refreshInFlight = doRefresh().finally(() => {\n" +
+                "    refreshInFlight = null;\n" +
+                "  });\n" +
+                "  return refreshInFlight;\n" +
+                "}",
+            },
+            prose("The second caller now awaits the same promise, and the flag clears even when the refresh fails."),
+          ],
+        },
+        {
+          role: "user",
+          createdAt: "2026-10-24T11:29:00.000Z",
+          parts: [prose("Also surface a notice in the editor when a refresh fails.")],
+        },
+        {
+          role: "assistant",
+          createdAt: "2026-10-24T11:29:30.000Z",
+          parts: [
+            prose("Add a one-line notice where the store reports failures; the extension already listens for it."),
+            {
+              kind: "code",
+              language: "ts",
+              file: "src/auth/notices.ts",
+              blockId: "3-1",
+              code: "export function refreshFailed(message: string): void {\n  window.showWarningMessage(`Refresh failed: ${message}`);\n}",
+            },
+            prose("Run the checks once the patch is in:"),
+            {
+              kind: "code",
+              language: "bash",
+              file: null,
+              blockId: "3-3",
+              code: "npm run check",
+            },
+          ],
+        },
+      ],
+    };
+  })();
+</script>
+<script src="../media/assistant.js"></script>
+<script>
+  (function () {
+    "use strict";
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var state = params.get("state") || "conversation";
+      function post(data) {
+        window.dispatchEvent(new MessageEvent("message", { data: data }));
+      }
+      function clone(value) {
+        return JSON.parse(JSON.stringify(value));
+      }
+      function sendWith(text) {
+        var textarea = document.getElementById("prompt");
+        textarea.value = text;
+        textarea.dispatchEvent(new Event("input", { bubbles: true }));
+        document.getElementById("send").click();
+      }
+
+      if (state === "empty") {
+        var empty = clone(window.__previewState);
+        empty.messages = [];
+        empty.carriedFrom = null;
+        post({ type: "state", state: empty });
+      } else if (state === "nokey") {
+        post({
+          type: "state",
+          state: { kind: "no-key", provider: "openai-compatible", model: "gpt-4o-2024-08-06" },
+        });
+      } else if (state === "awaiting") {
+        post({ type: "state", state: window.__previewState });
+        sendWith("Make the retry count configurable, and cap it at three attempts.");
+      } else if (state === "error" || state === "error-retry") {
+        post({ type: "state", state: window.__previewState });
+        sendWith("Make the retry count configurable.");
+        post(
+          state === "error"
+            ? {
+                type: "error",
+                message: "Assistant request failed (HTTP 401): incorrect API key provided",
+                recovery: "set-key",
+              }
+            : {
+                type: "error",
+                message: "Assistant request timed out after 90000ms",
+                recovery: "retry",
+              },
+        );
+      } else if (state === "carried") {
+        var carried = clone(window.__previewState);
+        carried.carriedFrom = {
+          type: "ai_prompt",
+          label: "AI prompt",
+          time: "11:26",
+          title: "Prompt: fix the double refresh in the session store",
+        };
+        carried.activeId = "evograph-checkpoint-06";
+        post({ type: "state", state: carried });
+        var carriedTranscript = document.querySelector(".transcript");
+        if (carriedTranscript) carriedTranscript.scrollTop = 0;
+      } else {
+        post({ type: "state", state: window.__previewState });
+      }
+
+      if (state === "top") {
+        var transcript = document.querySelector(".transcript");
+        if (transcript) transcript.scrollTop = 0;
+      }
+      if (state === "typing") {
+        var textarea = document.getElementById("prompt");
+        textarea.value = "Cap the retry at three attempts and log each failure.";
+        textarea.dispatchEvent(new Event("input", { bubbles: true }));
+        textarea.focus();
+      }
+      if (state === "focus-apply") {
+        var apply = document.querySelector(".apply");
+        if (apply) {
+          apply.classList.add("preview-focus-ring");
+          apply.focus();
+        }
+      }
+    } catch (error) {
+      document.getElementById("root").textContent = "PREVIEW ERROR: " + error.message;
+    }
+  })();
+</script>
+</body>
+</html>
