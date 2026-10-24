@@ -1,5 +1,29 @@
 # Journal
 
+## 2026-10-24 (cont. 3) -- impeccable init completed (PRODUCT.md)
+
+### What was done
+
+- User ran `impeccable init` (subagent session) after the M0 scaffold push: `PRODUCT.md` created at the repo root with the `impeccable:product-schema 1` marker. Platform `web`; v1 success = author dogfooding (porting the paper's study protocol and external users are explicitly not v1 validation routes). Open items recorded there: M5 board host (standalone web app vs VS Code webview panel), M1 webview stack, LLM provider, annotations overlay format, public name.
+- No `DESIGN.md` written (init never writes one); no `.impeccable` config needed (no image generation, app screens are code-first); live mode skipped (no runnable web surface yet).
+
+### Interface changes made
+
+- None (documentation only).
+
+### What I struggled with / broke
+
+- Nothing.
+
+### Test status
+
+Not applicable — no code changed.
+
+### Handoff to next agent
+
+- `PRODUCT.md` (repo root) is the product record, governed by the impeccable skill — do not hand-edit it or `DESIGN.md`; use the impeccable flows (no `impeccable context` rerun needed).
+- Next: dogfood M0 (open `extension/` in VS Code, press F5, run the 15-minute branching scenario), then request the M1 graph panel via `/impeccable shape` (bd `evo_graph_pms-mnd`).
+
 ## 2026-10-24 (cont. 2) -- Session 3: fusion scope ratified + M0 checkpoint core scaffolded
 
 ### What was done
