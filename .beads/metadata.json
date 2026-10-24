@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "evo_graph_pms",
+  "project_id": "e3bf79e1-9be5-4516-9c1b-b8e452b3b4b8"
+}
