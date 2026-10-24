@@ -62,6 +62,7 @@ cp -rf source dest          # NOT: cp -r source dest
 - `git for-each-ref` does not support `%x1f` pretty-format escapes (only `git log --format` does); use a literal tab separator when parsing ref listings.
 - Quality gate: `npm run check` in `extension/` (lint → typecheck → tests → compile) must be green before committing code changes.
 - Dev-host preflight: the Extension Development Host loads the **working tree**, not committed revisions. Before launching/reloading it, confirm `git status` shows no unexpected reverts and that `extension/out` is freshly compiled (`npm run compile`). Symptom of a stale tree: the palette shows old command ids (e.g. `evograph.restoreCheckpoint`) and the EvoGraph container is missing.
+- Capture evidence with the frame harness (`extension/preview/frame.html`): it renders a preview document at an exact panel size in an iframe. The headless browser clamps the window to ~500px wide and to the screen height, and it can reset between calls — set the viewport immediately before each capture batch, assert `window.innerWidth`/`innerHeight` cover the frame, then crop `WxH+0+0` with ImageMagick. Add a cache-buster (`&v=N`) to the iframe `src`: Firefox otherwise serves the previous harness file and a capture silently shows the old state. Preview-only CSS emulates the platform tokens (buttons, focus, themed scrollbar); production CSS must never depend on it.
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:7510c1e2 -->
 ## Beads Issue Tracker

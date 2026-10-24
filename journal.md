@@ -1,5 +1,44 @@
 # Journal
 
+## 2026-10-24 (cont. 10) -- M2 assistant loop: built, reviewed to `fix`, documented; dogfood pending
+
+### What was done
+
+- Built the M2 assistant loop end to end: checkpoint schema v2 (provider/model on AI checkpoints, v1 stores still readable), per-node conversation sidecars (`.evograph/chat/`, ancestor-walk restore), an OpenAI-compatible provider (configurable base URL/model, key in SecretStorage, typed request errors), a fenced-block parser with `file:` tags and path validation, and the assistant panel (view above the Checkpoint File) with send / apply / branch flows.
+- Engine: `sendPrompt` (history via the ancestor walk, so a follow-up from an applied node continues the conversation), `applyCodeBlock` (workspace-traversal guard, auto-save first, applied node follows the active line), `getConversation` returning `{ sourceId, messages }`.
+- Extracted the shared sheet base to `media/sheet.css`; the M1 sheet re-renders **pixel-identically** to the shipped capture (`compare -metric AE` = 0) after the extraction.
+- Evidence: 14 captures (4 renditions, 320/420/560, all states) in `.impeccable/review/m2-*.png`, produced with a new exact-size frame harness (`extension/preview/frame.html` + `assistant.html`).
+- Finish review (fresh subagent, degraded procedure): round 1 `recapture` (a 560px capture was really a clipped 500px one), round 2 `fix` (5 material findings), verdict pass scored fixes 2-5 **resolved**, no regressions; the only open item was the DESIGN.md record, which the user approved (A-E) and the documenter wrote.
+- Documentation: `DESIGN.md` (321 → 429 lines, 15 named rules: monospace-for-code, the prose content tier, the button family, the new Printed Measure Rule) and `.impeccable/design.json` reconciled (M1 knockout-plate drift repaired).
+
+### Interface changes made
+
+- `CheckpointMeta` gained optional `provider`/`model` (schema v2; `SCHEMA_VERSION = 2`).
+- `CheckpointEngine.getConversation(nodeId)` now returns `{ sourceId: string | null, messages: ChatMessage[] }` (was `ChatMessage[]`).
+- `ApplyCodeBlockInput.provider`/`.model` are optional (the applied node records the source reply's provenance when known).
+- New: `AssistantViewProvider`, `ConversationStore`, `parseContent`/`isUsableFilePath`, `AssistantProvider`/`OpenAICompatibleProvider`/`AssistantRequestError`, `createNonce`; `registerCommands(context, engine, refresh)` (dropped the statusBar parameter).
+- `package.json`: `evograph.assistant` view, `evograph.setAssistantApiKey` command, `evograph.assistant.baseUrl`/`.model` settings.
+
+### What I struggled with / broke
+
+- Capture harness bugs, all caught before shipping: a script in `frame.html`'s `<head>` ran before `body` existed; an `id()` helper was scoped inside the wrong IIFE; a cached iframe served the pre-fix harness (cache-buster now); and the headless browser clamped a 560px capture to its ~500px window, which the reviewer correctly returned as `recapture`. Guardrail added to AGENTS.md.
+- The reviewer flagged a genuine production risk the Firefox previews hid: the action and field relied on the browser's default border radius, and VS Code's webview is Chromium (rounded UA default). Added explicit `border-radius: 0`; re-verified AE=0 against both the shipped M1 capture and the reviewed M2 capture.
+- Pre-existing M1 drift left unrepaired by design (documenter's call): `.state-action`'s token fallbacks disagree with the recorded day-rendition literals — filed as a bd chore.
+
+### Test status
+
+```
+npm run check (extension/) — lint, typecheck, vitest, compile all green
+Test Files  6 passed (6)
+     Tests  64 passed (64)
+```
+
+### Handoff to next agent
+
+- M2 is code-complete, reviewed (`fix` → fixes resolved, no regressions) and documented; **dogfood is the remaining gate** before closing `evo_graph_pms-0zj`. Steps: reload the dev host (recompile already done by `npm run check`), run `EvoGraph: Set Assistant API Key…`, send a prompt, Apply a `file:`-tagged block, then branch by editing an earlier prompt after switching to its checkpoint.
+- Open thread: the DESIGN.md amendment for message prose is recorded as approved by the user this session (A-E); no further approval is needed for those wordings.
+- Local commits are ahead of `origin/main`; push only with the user's explicit permission.
+
 ## 2026-10-24 (cont. 9) -- Dogfood fix confirmed live; M1 pushed
 
 ### What was done
