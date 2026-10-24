@@ -1,5 +1,29 @@
 # Journal
 
+## 2026-10-24 (cont. 4) -- M0 dogfood passed; M0 closed
+
+### What was done
+
+- User dogfooded M0 in the Extension Development Host (open `extension/`, F5, repo as workspace): the checkpoint create/restore/branch scenario ran end-to-end and passed as far as tested. User is still learning the flow; no friction items filed yet.
+- Closed bd `evo_graph_pms-ldj` (M0) with a reason; `evo_graph_pms-mnd` (M1 graph panel) is now unblocked.
+
+### Interface changes made
+
+- None (bookkeeping only).
+
+### What I struggled with / broke
+
+- Nothing.
+
+### Test status
+
+Not applicable — no code changed (dogfood was behavioral; the unit gate stayed green from the scaffold commit).
+
+### Handoff to next agent
+
+- M1 (`evo_graph_pms-mnd`) is next: the development history graph panel (webview DAG). Start with the impeccable shape flow for the surface, then build — the first UI work establishes the design system (no `DESIGN.md` yet; `PRODUCT.md` exists).
+- Open decision at M1 start: webview stack (plain TS vs framework); see mini-spec Sections 5.2 and 8.
+
 ## 2026-10-24 (cont. 3) -- impeccable init completed (PRODUCT.md)
 
 ### What was done
