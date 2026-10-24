@@ -1,0 +1,54 @@
+{
+  "name": "evograph-nonlinear",
+  "displayName": "EvoGraph Nonlinear (working title)",
+  "description": "Non-linear AI-assisted coding: snapshots of code and AI interaction as a branching checkpoint graph.",
+  "version": "0.0.1",
+  "private": true,
+  "publisher": "hussamalraggad",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "extensionKind": [
+    "workspace"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false
+    }
+  },
+  "main": "./out/extension.js",
+  "activationEvents": [],
+  "contributes": {
+    "commands": [
+      {
+        "command": "evograph.createCheckpoint",
+        "title": "Create Checkpoint",
+        "category": "EvoGraph"
+      },
+      {
+        "command": "evograph.restoreCheckpoint",
+        "title": "Restore Checkpoint…",
+        "category": "EvoGraph"
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p .",
+    "watch": "tsc -w -p .",
+    "typecheck": "tsc -p tsconfig.test.json",
+    "lint": "eslint src test",
+    "test": "vitest run",
+    "check": "npm run lint && npm run typecheck && npm run test && npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "@types/vscode": "1.90.0",
+    "eslint": "^10.13.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.72.0",
+    "vitest": "^5.0.5"
+  }
+}

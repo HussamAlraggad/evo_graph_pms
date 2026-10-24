@@ -3,3 +3,9 @@
 .dolt/
 *.db
 .beads-credential-key
+
+# EvoGraph local checkpoint store (dogfooding)
+.evograph/
+
+# Packaged extension artifacts
+*.vsix
