@@ -1,5 +1,45 @@
 # Journal
 
+## 2026-10-24 (cont. 2) -- Session 3: fusion scope ratified + M0 checkpoint core scaffolded
+
+### What was done
+
+- Ratified the fused product with the user (PMS idea + non-linear interface as one product): one development graph as the system of record; IDE authoring surface first (M0-M4); read-only manager web view last (M5). v1 = solo developers; passivity = passive-first with optional one-keystroke confirms.
+- Appended Section 8 to `history/evograph-ide-execution-brief.md`: decision table, M0-M5 map with bd IDs, explicit v1 non-goals (microservices, IntelliJ, budget service, OS deep-work, multi-user merge, graph DB, public "EvoGraph" naming).
+- Wrote `history/nonlinear-interface-mini-spec.md`: node/edge model (schema-ready task nodes; reserved types), shadow-git storage layout (refs, scratch index, exact git plumbing), metadata-encoding decision (message-embedded JSON + per-checkpoint refs; deviates from the brief's notes suggestion, rationale in spec Section 3.4), UI states M0-M5, passive-first confirm flow, acceptance + test plan.
+- Scaffolded M0 in `extension/`: VS Code extension (TypeScript); shadow-git store (`<workspace>/.evograph/store.git`); engine with origin/manual checkpoints, heuristic titles/descriptions, restore (checkout + untracked cleanup + empty-dir pruning), persistence; status bar + commands; 23 vitest tests; lint/typecheck/compile configs; F5 launch config; extension README.
+- bd: claimed and rescoped `evo_graph_pms-ldj` (M0); filed M1-M5 (`evo_graph_pms-mnd`, `-0zj`, `-uzg`, `-dpk`, `-m8r`) chained by blocking deps; filed docs extraction (`evo_graph_pms-em9`) and naming (`evo_graph_pms-6rb`).
+- Refreshed root `README.md`; extended `AGENTS.md` (execution state, impeccable guardrail, extension dev notes).
+
+### Interface changes made
+
+- `CheckpointMeta`/`Checkpoint` (schemaVersion 1; reserved `taskId`); checkpoint types origin/manual/ai_prompt/ai_applied.
+- `ShadowGitStore` (ensure/getActiveOid/setActive/addCheckpointRef/listCheckpointRefs/snapshotWorktreeIntoIndex/writeTree/commitTree/readCommit/listCommits/diffNames/restoreTree).
+- `CheckpointEngine` (getActiveCheckpoint/listCheckpoints/createCheckpoint/restoreCheckpoint) with pluggable `CheckpointSummarizer` (heuristic implementation shipped).
+- Storage layout: `.evograph/store.git` (bare), `refs/evograph/active`, `refs/evograph/checkpoints/<uuid>`, `scratch.index`.
+
+### What I struggled with / broke
+
+- `git for-each-ref` does not support `%x1f` escapes (only `git log --format` does); ref listing parsed empty OIDs and cascaded into a `git log` failure. Fixed with a literal tab separator; captured as an AGENTS.md rule.
+- TypeScript 6.0: `moduleResolution: node` (node10) now errors as deprecated; moved to NodeNext. TS 6 also stopped auto-including `@types/node` for src-only configs; fixed with explicit `"types": ["node"]`.
+- `@types/vscode` caret resolved to 1.140 while the engines floor is `^1.90.0`; pinned 1.90.0 exact to match the floor.
+- vitest warned about ESM syntax in a CommonJS-loaded `vitest.config.ts`; renamed to `vitest.config.mts`.
+- Lint caught an unused `statusBar` parameter in `showStatusMenu`; removed.
+
+### Test status
+
+```
+npm run check (extension/): lint clean; tsc -p tsconfig.test.json clean;
+vitest run: 3 files, 23/23 tests passed; tsc -p . compile clean.
+```
+
+### Handoff to next agent
+
+- M0 scaffold is code-complete but NOT yet dogfooded in a live Extension Development Host: open `extension/` in VS Code, press F5, run the 15-minute branching scenario (brief Section 4 acceptance). Findings become new bd issues.
+- `impeccable init` runs immediately after this session (user-run): it creates `PRODUCT.md` at the repo root — do not hand-edit `PRODUCT.md`/`DESIGN.md`; use the impeccable flows.
+- Next bd work: `evo_graph_pms-mnd` (M1 graph panel) after M0 dogfood; webview stack decision is open (mini-spec Section 8).
+- `git push` and `bd dolt push` were NOT run — waiting for explicit user permission (global git rule).
+
 ## 2026-10-24 (cont.) -- Focus clarification: the non-linear interface
 
 ### What was done
