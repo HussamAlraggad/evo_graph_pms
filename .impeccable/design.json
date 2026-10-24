@@ -184,8 +184,9 @@
       { "name": "The Read-Down Rule", "body": "Time runs down and branch depth runs right — the footer says it: read down = time. Time is never laid horizontally and the sheet is never rotated.", "section": "layout" },
       { "name": "The Forty-Five Rule", "body": "Every route change of direction is a true 45° elbow: vertical, then a diagonal exactly as long as the lane offset, then vertical again. No curves, no beziers, no arcs anywhere in the routing.", "section": "layout" },
       { "name": "The Sheet Width Rule", "body": "The drawing sets the sheet's width and the header and footer cap to it. Chrome never outruns the drawing, and the drawing never compresses below 300px.", "section": "layout" },
+      { "name": "The Knockout Plate Rule", "body": "A station's label is printed on a plate, not laid over the map: the name and micro-tag sit on a ground-coloured block drawn first in the station group, so the trunk, the branch lines, the ghost dashes and the course thread stop at the block and resume past it — while the row's own flood and hover washes still tint it. The sheet never asks the reader to choose between the line and the word: a line is never drawn across a name.", "section": "layout" },
       { "name": "The Flat Sheet Rule", "body": "The sheet is flat at rest and in every state. Layering is done with 1px rules, one tinted band and draw order; the moment a sheet element needs a shadow to be legible, the hierarchy has failed, not the shadow budget.", "section": "elevation" },
-      { "name": "The Two-Pixel Rule", "body": "2px is the entire radius budget for rectangles in this system — the flooded row and its focus ring. Everything else that is rectangular is square; anything that is round is a control.", "section": "shapes" },
+      { "name": "The Two-Pixel Rule", "body": "2px is the entire radius budget for rectangles in this system — the flooded row, its focus ring and the label plate. Everything else that is rectangular is square; anything that is round is a control.", "section": "shapes" },
       { "name": "The Punched Control Rule", "body": "A control ring is filled with the ground, not left transparent: the course thread runs behind the control, so each ring reads as a hole punched in the route. Circles are reserved for on-course checkpoints, and only on-course checkpoints carry numbers.", "section": "shapes" },
       { "name": "The Dash Means Ghost Rule", "body": "Dashes carry one meaning wherever they appear: nothing has been ridden here — an abandoned leg (9/7 dash), or a sheet with no records yet (the card's dashed border). Never decorative.", "section": "shapes" }
     ],
@@ -196,7 +197,7 @@
       "Do keep provenance in the micro-tag: olive for \"AI prompt\", amber for \"AI applied\", faded ink for origin and manual. A type never colours a line, a ring or a row.",
       "Do keep every string uppercase, in the bundled condensed face, between 8.5px and 12px.",
       "Do let the theme choose the rendition and the header name it; retune ground, ink, dim and rule and all four accents together, never one alone.",
-      "Do keep the 2px radii to the flooded band and its focus ring, keep off-course records as a 22px tick, and keep every route turn at 45°.",
+      "Do keep the 2px radii to the flooded band, its focus ring and the label plate, keep off-course records as a 22px tick, and keep every route turn at 45°.",
       "Do keep the hit row at least 56px tall and 160px wide, with a visible focus ring on :focus-visible."
     ],
     "donts": [

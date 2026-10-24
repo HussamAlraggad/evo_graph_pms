@@ -222,6 +222,8 @@ Spacing rhythm: a 14px gutter on the header and footer, 16px insets inside the s
 
 **The Sheet Width Rule.** The drawing sets the sheet's width and the header and footer cap to it. Chrome never outruns the drawing, and the drawing never compresses below 300px.
 
+**The Knockout Plate Rule.** A station's label is printed on a plate, not laid over the map: the name and micro-tag sit on a ground-coloured block drawn first in the station group, so the trunk, the branch lines, the ghost dashes and the course thread stop at the block and resume past it — while the row's own flood and hover washes still tint it. The sheet never asks the reader to choose between the line and the word: a line is never drawn across a name.
+
 ## Elevation & Depth
 
 Flat by construction. The sheet is a printed surface — no shadows, no gradients, no translucency. Depth is carried by three things only: 1px rules (the header and footer hairlines, the dashed state-card border), one tinted band (the flood behind the active control), and the layer order of the drawing itself — trunk and branches first, ghost legs next, the course thread over them, stations on top. The control rings are punched: filled with the ground so the thread passes behind them rather than through.
@@ -238,11 +240,11 @@ Exactly one shadow ships, and it is not on the sheet: the context menu floats ab
 
 ## Shapes
 
-Rectangles are square: header, footer, state card, action button and menu all carry 0 radius. The entire rectangle radius budget is 2px, spent twice — on the flooded band behind the active control and on its focus ring. Circles belong to controls alone: a ring at r=9, r=10 at a junction (with a 15px halo at 45% violet behind it), r=11 when active with its stroke thickened from 2.5 to 3.5. Off-course records are marked with a 22×2px ink bar instead of a ring, and are never numbered. Dashes are a vocabulary, not a texture: 9/7 at 3.5px for an abandoned leg, a 4/3 miniaturisation in the footer key, and a 1px dashed border on a sheet with no records.
+Rectangles are square: header, footer, state card, action button and menu all carry 0 radius. The entire rectangle radius budget is 2px, spent three times — on the flooded band behind the active control, on its focus ring and on the station label plate. Circles belong to controls alone: a ring at r=9, r=10 at a junction (with a 15px halo at 45% violet behind it), r=11 when active with its stroke thickened from 2.5 to 3.5. Off-course records are marked with a 22×2px ink bar instead of a ring, and are never numbered. Dashes are a vocabulary, not a texture: 9/7 at 3.5px for an abandoned leg, a 4/3 miniaturisation in the footer key, and a 1px dashed border on a sheet with no records.
 
 ### Named Rules
 
-**The Two-Pixel Rule.** 2px is the entire radius budget for rectangles in this system — the flooded row and its focus ring. Everything else that is rectangular is square; anything that is round is a control.
+**The Two-Pixel Rule.** 2px is the entire radius budget for rectangles in this system — the flooded row, its focus ring and the label plate. Everything else that is rectangular is square; anything that is round is a control.
 
 **The Punched Control Rule.** A control ring is filled with the ground, not left transparent: the course thread runs *behind* the control, so each ring reads as a hole punched in the route. Circles are reserved for on-course checkpoints, and only on-course checkpoints carry numbers.
 
@@ -273,6 +275,7 @@ The atom of the system: one checkpoint as a stop on the course, drawn as a mark,
 
 - **Mark:** on the course, a numbered control ring (violet stroke, ground fill); a junction adds the halo and takes the ring to r=10; the active station takes r=11, a 3.5px stroke, a flooded 52px band and a micro-tag switched to deep violet with "· active" appended.
 - **Row:** the name sits 22px right of the control centre, 11.5px/700 caps; the micro-tag follows 15px below the name's baseline, at 8.5px with 0.14em tracking.
+- **Label plate:** a ground-coloured plate (rx=2) sits behind the two-line label block — starting 16px right of the lane centre (1px clear of the widest mark, the 15px junction halo), running the estimated text advance plus 6px of air on each side, and standing 36px tall from 13px above the lane centre to 23px below it. It is the first thing drawn in the station group, so the trunk, branch lines, ghost dashes and course thread stop at the block and resume past it, while the flood and hover washes still tint it. Its width uses the same per-character advances as the ellipsis (7px for the name, 5.2px for the tag plus 3px for the separator), so the plate hugs the text as printed.
 - **Hit area:** a 56px-tall invisible row, minimum 160px wide, washed with the course hover tint under the pointer. The focus ring shares the same box and the same 2px radius.
 - **Focus:** the ring is painted only on `:focus-visible` — 2px in the platform focus colour — and keyboard focus is restored to the same station after a switch re-renders the sheet.
 - **Pending:** a station awaiting a switch drops to 55% opacity.
@@ -302,7 +305,7 @@ Four strokes carry the whole network, and their weights are doctrine.
 - **Do** keep provenance in the micro-tag: olive for "AI prompt", amber for "AI applied", faded ink for origin and manual. A type never colours a line, a ring or a row.
 - **Do** keep every string uppercase, in the bundled condensed face, between 8.5px and 12px.
 - **Do** let the theme choose the rendition and the header name it; retune ground, ink, dim and rule and all four accents together, never one alone.
-- **Do** keep the 2px radii to the flooded band and its focus ring, keep off-course records as a 22px tick, and keep every route turn at 45°.
+- **Do** keep the 2px radii to the flooded band, its focus ring and the label plate, keep off-course records as a 22px tick, and keep every route turn at 45°.
 - **Do** keep the hit row at least 56px tall and 160px wide, with a visible focus ring on :focus-visible.
 
 ### Don't:

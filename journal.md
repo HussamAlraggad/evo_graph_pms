@@ -1,5 +1,63 @@
 # Journal
 
+## 2026-10-24 (cont. 8) -- First live dogfood: label-knockout fix + verified live store
+
+### What was done
+
+- Recovered the working tree (see cont. 7), relaunched the dev host, and the user ran the first real dogfood session: 8 checkpoints with two diverging branches, an "Auto-save before switching" node (the passive safety flow fired for real), visited tracking and active-ref movement — all verified from the CLI against `.evograph/store.git`.
+- User-reported UX defect: branch lines rendered through station labels in topologies where a spine node sits between the fork and its sibling. Reproduced in the preview harness (default model topology updated: login created before auth-flow), fixed with label knockout plates (ground-coloured rect behind each two-line label block, drawn first in the station group under the flood/hover tints; `graph.js` + `.plate` in `view.css`).
+- Finish reviewer (continuation) confirmed the fix: knockout geometry exact, flood/hover uniformity intact, no regressions, ship stands over the change; evidence `fix-before-login-collision.png` / `fix-after-login-collision.png` plus the regenerated 23-file evidence set.
+- Documenter (continuation) reconciled the record: `DESIGN.md` gained "The Knockout Plate Rule" (14 rules now), the station vocabulary gained the label-plate bullet, the Two-Pixel Rule now enumerates its third 2px use; the sidecar mirrored. The two previously flagged items (`.station.switching` wiring, HC-light harness path) are resolved by the same fix session; the state-action button face remains deliberately sheet-side.
+
+### Interface changes made
+
+- Label plates (`.plate`) in the station group; preview model's default topology changed to the collision-inducing shape (regression guard).
+
+### What I struggled with / broke
+
+- The collision escaped the harness because its default model did not exercise the topology; the live user hit it immediately. The fix was to make the failure topology the default model, not a special-case state.
+
+### Test status
+
+```
+npm run check (extension/): lint (src, test, media) clean; typecheck clean; vitest 30/30; compile clean.
+Finish reviewer: ship stands over the label-plate fix (targeted confirmation).
+```
+
+### Handoff to next agent
+
+- Dogfood continues (switch-back, delete-with-reattach, theme flip); findings become bd issues (`discovered-from:evo_graph_pms-mnd`).
+- The label-plate fix + design-record update are committed locally; push pending user permission together with the M1 release commits.
+
+## 2026-10-24 (cont. 7) -- Working-tree revert incident during M1 dogfood launch (recovered)
+
+### What was done
+
+- Launched the Extension Development Host for M1 dogfood (`code --extensionDevelopmentPath=extension <repo>`). The user could not find the EvoGraph container.
+- Diagnosed from logs: at 18:24 (after the M1 commits) the working tree had been reverted to the pre-M1 state — tracked files modified by the M1 commits were restored to their 9010afb content and every file added by those commits (media/, preview/, historyView.ts, errors.ts, .impeccable/** including DESIGN.md's sidecar and the review evidence) was deleted from disk. Untracked user files (m1_test.md, etst.txt) survived. No destructive reset appears in the reflog, so the operation did not move HEAD (a checkout/discard-style revert outside this session is the likely cause — possibly another tool or session).
+- Impact: the dev host had loaded the stale (M0) extension — no `viewsContainers` in the manifest (hence no panel) and the palette activated `onCommand:evograph.restoreCheckpoint` (the old id).
+- Recovery: `git reset --hard HEAD` (HEAD = b1b6a29, the M1 milestone commit — all M1 files are committed, so nothing was lost), `npm run compile`, full `npm run check` green (30/30), media/ + .impeccable/review (21 files) + the M1 manifest verified back in place.
+- Guardrail added to AGENTS.md: dev-host preflight — the Extension Development Host loads the working tree, not commits; confirm `git status` is clean and run `npm run compile` before launching; a missing container + old command ids are the symptom of a stale tree.
+
+### Interface changes made
+
+- None (recovery only).
+
+### What I struggled with / broke
+
+- Nothing broken by this session's actions; the revert's origin is unexplained (not in the reflog). Watch for recurrence; if it happens again, check other running sessions/tools first.
+
+### Test status
+
+```
+npm run check (extension/): lint clean; typecheck clean; vitest 30/30; compile clean (post-recovery).
+```
+
+### Handoff to next agent
+
+- Dogfood continues: reload the dev host window (Developer: Reload Window) so it re-scans the restored extension, then run the M1 checklist (panel via palette "EvoGraph: Open Checkpoint File" or the secondary sidebar).
+- Before any future dev-host launch: `git status` clean + `npm run compile` (see AGENTS.md preflight rule).
+
 ## 2026-10-24 (cont. 6) -- M1 finish: ship verdict, documentation, and the wiring catch
 
 ### What was done

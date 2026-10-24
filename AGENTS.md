@@ -61,6 +61,7 @@ cp -rf source dest          # NOT: cp -r source dest
 - Toolchain: TypeScript 6 in NodeNext mode. Keep `module`/`moduleResolution` on NodeNext (node10 resolution is deprecated and errors), keep `"types": ["node"]` in `tsconfig.json` (TS 6 no longer auto-includes node types for src-only configs), and keep the vitest config named `vitest.config.mts` (a `.ts` config is loaded as CommonJS and warns).
 - `git for-each-ref` does not support `%x1f` pretty-format escapes (only `git log --format` does); use a literal tab separator when parsing ref listings.
 - Quality gate: `npm run check` in `extension/` (lint → typecheck → tests → compile) must be green before committing code changes.
+- Dev-host preflight: the Extension Development Host loads the **working tree**, not committed revisions. Before launching/reloading it, confirm `git status` shows no unexpected reverts and that `extension/out` is freshly compiled (`npm run compile`). Symptom of a stale tree: the palette shows old command ids (e.g. `evograph.restoreCheckpoint`) and the EvoGraph container is missing.
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:7510c1e2 -->
 ## Beads Issue Tracker
