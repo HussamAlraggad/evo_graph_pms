@@ -3,14 +3,16 @@
 - Date: 2026-10-24
 - Repo: `evo_graph_pms`
 - Scope: full web research on "EvoGraph IDE" — research papers, published related work, helpful resources — plus feasibility analysis for building a Project Management System (PMS) inspired by it.
+- Focus (clarified by user, 2026-10-24): the **EvoGraph IDE tool only — the non-linear interface for AI-assisted coding** (arXiv:2604.18883). This is the primary subject of this repo. The "Software 3.0" EvoGraph (arXiv:2508.05199) is retained as adjacent reference material; all other same-name works exist for disambiguation only.
 - Method: Firecrawl web/paper/developer indexes + arXiv HTML full-text scraping + citation-harvesting from the papers' own bibliographies + author/lab/company verification. Sources checked 2026-10-24. Caveats in Section 9.
 
 ---
 
 ## 0. TL;DR
 
-1. "EvoGraph" is an overloaded name — at least 14 distinct works/products use it (see Section 1). Two of them are directly relevant to this repo:
-   - **EvoGraph, the IDE plugin** — *"Choose Your Own Adventure: Non-Linear AI-Assisted Programming with EvoGraph"* (arXiv:2604.18883, Apr 2026) by Vassilios Exarhakos (McGill), Jinghui Cheng (Polytechnique Montreal), Jin L.C. Guo (McGill). A VS Code extension that records AI-assisted coding as a branching "development graph" of checkpoints (prompts + code + manual changes) that developers can compare, merge, branch from, and turn into AI context. Validated with a 20-participant within-subjects study: significantly lower cognitive load, better alternative exploration, better prompt/context management, easier change tracing.
+0. The idea in one sentence: replace the linear AI-coding chat with an explicit **graph of development checkpoints** (human edits, AI prompts, applied AI changes) that can be branched, compared, merged, revisited, and fed back in as context — this is what this repo calls the **non-linear interface** for AI-assisted coding.
+1. "EvoGraph" is an overloaded name — at least 14 distinct works/products use it (see Section 1). Two of them surfaced during research; only the first is a build target:
+   - **PRIMARY FOCUS — EvoGraph, the IDE plugin (the non-linear interface)** — *"Choose Your Own Adventure: Non-Linear AI-Assisted Programming with EvoGraph"* (arXiv:2604.18883, Apr 2026) by Vassilios Exarhakos (McGill), Jinghui Cheng (Polytechnique Montreal), Jin L.C. Guo (McGill). A VS Code extension that records AI-assisted coding as a branching "development graph" of checkpoints (prompts + code + manual changes) that developers can compare, merge, branch from, and turn into AI context. Validated with a 20-participant within-subjects study: significantly lower cognitive load, better alternative exploration, better prompt/context management, easier change tracing.
    - **EvoGraph, the self-evolving software framework** — *"EvoGraph: Hybrid Directed Graph Evolution toward Software 3.0"* (arXiv:2508.05199, Aug 2025) by Igor Costa and Christopher Baran (AutoHand AI, New Zealand). Represents an entire software estate as a typed directed graph — including **ticket nodes** ingested from Jira/GitHub Issues — and evolves it with SLM-driven mutation operators under a multi-objective fitness and a safety gate.
 2. **Feasibility verdict for an EvoGraph-inspired PMS: plausible and largely greenfield.** The IDE paper explicitly leaves team collaboration ("share the graph", "review with prompt history") as future work; the Software 3.0 paper ingests tickets as nodes but defines **no ticket mutation operator** — both gaps are exactly where a PMS-shaped product could sit. Main costs/risks: neither work has public code, multi-user graph semantics are unsolved, and the Software 3.0 evidence is an unrefereed preprint with no artifacts. Details and build paths in Section 7.
 3. No public implementation, marketplace extension, or repository was found for either core work as of 2026-10-24.
@@ -41,6 +43,42 @@ Adjacent "evo-*" graph papers worth knowing: EvoGit (decentralized code evolutio
 ---
 
 ## 2. Core work 1 — EvoGraph IDE plugin (non-linear AI-assisted programming)
+
+### 2.0 The non-linear interface — concept and vocabulary (execution quick reference)
+
+**Definition**: EvoGraph replaces the single linear chat thread with an explicit, manipulable **development graph** in which AI interactions and codebase states co-evolve. Every meaningful event becomes a checkpoint node; the developer can branch, compare, merge, restore, and reuse the graph as prompt context.
+
+Linear vs non-linear, side by side:
+
+| | Linear interface (status quo) | Non-linear interface (EvoGraph) |
+|---|---|---|
+| History model | One append-only chat thread | Branching DAG of checkpoints (code + conversation states together) |
+| Exploring alternatives | Manually revert code and re-prompt; earlier context lost | Branch from any checkpoint; alternatives coexist |
+| Comparing options | Re-read long chats; diff by hand | One diff view comparing two checkpoints, code and interaction states together |
+| Converging | Copy-paste or restart | Merge two checkpoints (LLM-assisted code merge; chat merge via summary) |
+| Recovering | Scroll and hand-revert | Click a node to restore code + assistant state |
+| Context | Whatever is in the chat window | Option to include the whole branching history as context |
+| Provenance | Unclear which prompt produced what | Review Mode: green = human, blue = AI; hover shows the responsible checkpoint |
+
+Vocabulary (use these exact terms in UI, specs, and code):
+
+| Term | Meaning |
+|---|---|
+| Checkpoint | Snapshot of AI-assisted development at a point in time (codebase state + AI interaction state) |
+| Manual change checkpoint | Created by the user via the Checkpoint button |
+| AI prompt checkpoint | Auto-created on each prompt/response; editing an earlier prompt branches from it |
+| AI code applied checkpoint | Auto-created when the user applies an AI-suggested code block |
+| Active checkpoint | The single node the workspace currently reflects |
+| Branch | New child of a node that already has a child; nothing is overwritten |
+| Compare with active | Temporary diff of code + AI interaction states between two checkpoints |
+| Merge with active | New checkpoint combining two; code merged by the LLM from MRCA diffs; chat merged via a summary message |
+| Graph-as-context | Toggle that includes the branching history in the next prompt |
+| Review Mode | Inline provenance annotations for all changes since origin |
+| Responsible node | The checkpoint credited for a code region (file, description, type, timestamp, id) |
+
+**Why it works** (from the 20-participant study): lower cognitive load (less frustration), easier exploration of alternatives, better prompt/context management, easier tracing of AI-generated changes. Qualitative themes: safe exploration, efficient iteration, GUI-based reverting, reflection on AI-generated changes.
+
+**Still unsolved** (invention surface; see Section 6.4): multi-user graph merge semantics; which paths to include as context (the paper only has a toggle); provenance richer than human/AI (requirements, rationale, tradeoffs); checkpoint capture heuristics (participants forgot manual checkpoints); visual complexity management; snapshot-storage scale.
 
 ### 2.1 Identity and provenance
 
@@ -340,9 +378,9 @@ Treat the artefact graph (Path B) as the single source of truth; the IDE plugin 
 
 ### 6.7 Concrete next steps (options)
 
-1. Write a one-page product spec choosing Path A/B/C and the MVP surface (recommend: Path B MVP = ticket graph + checkpoint provenance + agent-run attachments on one repo, single team).
-2. Spike a VS Code extension that mirrors EvoGraph IDE's checkpoint model on top of git (worktrees + commit metadata), reusing its exact UI vocabulary (checkpoint types, colors, Review Mode).
-3. Draft the graph schema (node/edge tables) as a design doc under `history/` before writing code.
+1. Write the product spec choosing Path A/B/C and the MVP surface. Focus-clarified recommendation: start with **Path A (the non-linear interface MVP in a VS Code extension)** and treat Path C as the destination; the concrete M0-M3 plan and the five opening decisions live in `history/evograph-ide-execution-brief.md`.
+2. Spike a VS Code extension that mirrors EvoGraph IDE's checkpoint model on top of git (recommended: shadow git repo for checkpoint storage), reusing its exact UI vocabulary (checkpoint types, colors, Review Mode).
+3. Draft the checkpoint data model (nodes/edges/metadata) and shadow-git storage layout as a design doc under `history/` before writing code.
 
 ---
 

@@ -1,5 +1,35 @@
 # Journal
 
+## 2026-10-24 (cont.) -- Focus clarification: the non-linear interface
+
+### What was done
+
+- User clarified the repo focus: **EvoGraph IDE = the non-linear interface for AI-assisted coding (arXiv:2604.18883), and only that**. The Software 3.0 EvoGraph and all other same-name works stay as reference/disambiguation material, not build targets.
+- Promoted the focus statement in `history/evograph-ide-research.md` (header focus line, TL;DR re-tagging, new Section 2.0 "concept and vocabulary" quick reference).
+- Adjusted the dossier's next-step recommendation (Section 6.7): start with Path A (non-linear interface MVP), with Path C as destination.
+- Added `history/evograph-ide-execution-brief.md`: decisions to make, M0-M3 MVP plan (shadow-git checkpoint core → graph panel → compare/review → graph-as-context + merge), reusable assets, risks, first tasks.
+- AGENTS.md: added a repo-focus line so future agents default to the right EvoGraph.
+- bd: created the session-2 execution issue (discovered-from `evo_graph_pms-b2a`).
+
+### Interface changes made
+
+- None (docs only).
+
+### What I struggled with / broke
+
+- Nothing new this round. (Earlier session issues stand in the entry below.)
+
+### Test status
+
+Not applicable — no code changed.
+
+### Handoff to next agent
+
+- Start at `history/evograph-ide-execution-brief.md`; then read dossier Sections 2.0 (vocabulary), 2 (deep dive), and 6 (PMS angle).
+- Do NOT re-research the paper — ground truth, numbers, and citations are captured in the dossier.
+- Session 2's first 30 minutes: make the five decisions in the brief (build path, MVP scope, model access, checkpoint storage — recommended shadow git repo, assistant surface). Append decisions to the brief.
+- Naming: do not ship publicly as "EvoGraph" (14+ collisions; dossier Section 1).
+
 ## 2026-10-24 -- EvoGraph IDE research session
 
 ### What was done

@@ -49,6 +49,7 @@ cp -rf source dest          # NOT: cp -r source dest
 
 ## Research & Tooling Notes
 
+- Repo focus: the **non-linear interface for AI-assisted coding** (EvoGraph IDE, arXiv:2604.18883). The Software 3.0 EvoGraph (arXiv:2508.05199) is adjacent reference only. Execution plan lives in `history/evograph-ide-execution-brief.md`.
 - Before batching tool calls, read each tool's required parameters from the catalog. Missing required args (e.g., `firecrawl_research_related_papers.intent`) can silently return empty results instead of raising errors.
 - Keep Firecrawl scrape concurrency moderate (about 8 or fewer scrapes per batch); the API rate-limits at ~11 requests/min and partial failures are easy to miss inside batched `Promise.allSettled` results. Prefer search snippets over full scrapes when full text is not needed.
 - "EvoGraph" is overloaded (14+ distinct works/products). Always qualify which EvoGraph is meant: the IDE plugin (arXiv:2604.18883), the Software 3.0 framework (arXiv:2508.05199), or an unrelated same-name work (see the disambiguation table in `history/evograph-ide-research.md`).
